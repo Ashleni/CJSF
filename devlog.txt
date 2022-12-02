@@ -1,0 +1,14 @@
+Crazy Joe Speaks Frogs:: Kevin Wang, Shreya Roy, Justin Mohabir, Faiyaz Rafee
+SoftDev
+P01 -- devlog
+
+format: -----------------------------------------------------------------------
+
+firstL -- TIMESTAMP\n
+	explain what changes have been made
+	include errors/bugs discovered (or created)
+	
+-------------------------------------------------------------------------------
+
+Kevin Wang, Shreya Roy, Justin Mohabir, Faiyaz Rafee -- 12/2/2022 14:00
+    decided on the topic, submitted forms, added submodules
