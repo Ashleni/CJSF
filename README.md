@@ -1,4 +1,4 @@
-gabagoo by Crazy Joe Speaking Frogs
+Googol maps by Crazy Joe Speaking Frogs
 ==
 
 Project Manager : Kevin Wang 
