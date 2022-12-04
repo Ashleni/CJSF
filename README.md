@@ -15,8 +15,9 @@ Apis Used:
 
 
 Launch Codes:   
-* Pull from repository
-* Create a virtual enviroment
+* git clone https://github.com/kev1n/CJSF.git
+* cd CJSF
+* python3 -m venv venv
 * Run ```pip -r requirements.txt```
 * Run ```py __init__.py```  
-* Open "localhost:5000" in you favorite browser
+* Open "localhost:5000" in your favorite browser
