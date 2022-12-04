@@ -1,14 +1,52 @@
-Crazy Joe Speaks Frogs:: Kevin Wang, Shreya Roy, Justin Mohabir, Faiyaz Rafee
-SoftDev
-P01 -- devlog
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+USAGE:
+* Replace all fields, angle brackets included, with specified info.
+  eg, pd <pd#> --> pd 3
+* Delete these instructions once all teammates understand usage.
+  (from tilde bar above to tilde bar below)
+* rename this file devlog.txt
 
-format: -----------------------------------------------------------------------
+devlog--
+Use keyboard shortcut to jump to end,
+ replicate entry template, (Ctrl-Shift up x5, Ctrl-X, Ctrl-V x2)
+ modify appropriately.
+Each entry should begin with the following format:
+ firstL -- TIMESTAMP\n
+e.g.: 
+clydeS -- 2999-12-31 23:59
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-firstL -- TIMESTAMP\n
-	explain what changes have been made
-	include errors/bugs discovered (or created)
-	
--------------------------------------------------------------------------------
+Crazy Joe Speaks Frogs
+Kevin Wang
+Shreya Roy
+Justin Mohabir
+Faiyaz Rafee
+pd 8
+---------------------
+Boot-leg Google Maps
 
-Kevin Wang, Shreya Roy, Justin Mohabir, Faiyaz Rafee -- 12/2/2022 14:00
-    decided on the topic, submitted forms, added submodules
+ ______   ______   __   __   __       ______   _______     
+/_____/\ /_____/\ /_/\ /_/\ /_/\     /_____/\ /______/\    
+\:::_ \ \\::::_\/_\:\ \\ \ \\:\ \    \:::_ \ \\::::__\/__  
+ \:\ \ \ \\:\/___/\\:\ \\ \ \\:\ \    \:\ \ \ \\:\ /____/\ 
+  \:\ \ \ \\::___\/_\:\_/.:\ \\:\ \____\:\ \ \ \\:\\_  _\/ 
+   \:\/.:| |\:\____/\\ ..::/ / \:\/___/\\:\_\ \ \\:\_\ \ \ 
+    \____/_/ \_____\/ \___/_(   \_____\/ \_____\/ \_____\/ 
+==============================================================
+||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+
+
+Kevin Wang -- 12/2/2022 14:00
+	submitted forms, added submodules, init github repo
+
+Shreya Roy, Justin Mohabir, Faiyaz Rafee -- 12/2/2022 14:00
+    decided on the topic
+
+Kevin Wang -- 12/4/2022 17:00
+	update api_kb to account for the new api we're using
+
+Justin Mohabir, Faiyaz Rafee -- 12/4/2022 17:00
+	update README
+
+Kevin Wang, Shreya Roy, Justin Mohabir, Faiyaz Rafee -- 12/4/2022 17:00
+    collaborated to create design doc,
