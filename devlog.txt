@@ -71,8 +71,12 @@ Shreya Roy, Justin Mohabir -- 12/5/2022 14:00
 Kevin Wang, Shreya Roy, Justin Mohabir, Faiyaz Rafee -- 12/6/2022 17:00
 --------------------------------------------------------------
 	revised design doc following other team reviewers
+  * clarified what gabagoo and hehehaha were  
+  * articulated what we wanted our webpages to look like (i.e. the templates)
+  * made component map clearer by changing where the API interacts with the client
 ==============================================================
 Shreya Roy -- 12/7/2022 12:30
 --------------------------------------------------------------
 	position stack api functions fully working (latitude / longitude)
 ==============================================================
+
