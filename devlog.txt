@@ -72,3 +72,7 @@ Kevin Wang, Shreya Roy, Justin Mohabir, Faiyaz Rafee -- 12/6/2022 17:00
 --------------------------------------------------------------
 	revised design doc following other team reviewers
 ==============================================================
+Shreya Roy -- 12/7/2022 12:30
+--------------------------------------------------------------
+	position stack api functions fully working (latitude / longitude)
+==============================================================
