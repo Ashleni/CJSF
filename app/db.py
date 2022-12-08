@@ -9,7 +9,7 @@ DB_FILE="database.db"
 def wipeDB():
     db = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
     c = db.cursor()               #facilitate db ops -- you will use cursor to trigger db events
-    c.execute("DROP TABLE if exists users") #drop so no need to delete database each time the code changes
+    c.execute("DROP TABLE if exists authentication") #drop so no need to delete database each time the code changes
     c.execute("DROP TABLE if exists pastSearches")
     c.executescript(""" 
         CREATE TABLE authentication (username TEXT PRIMARY KEY, password TEXT NOT NULL);
@@ -39,7 +39,7 @@ def sample(): #adds sample data
     c = db.cursor()
     register_user("kevin", "abcdefgh")
     register_user("faiyaz", "12345678")
-    date = c.execute("SELECT DATETIME('now');").fetchall()
+
     past_searches = [
         ("faiyaz", "345 Chambers St"),
         ("kevin", "29 Fort Greene Pl")
@@ -107,24 +107,6 @@ def past_searches_for_user(username): #for printing all users and past searches
     return results
 #==========================================================
 def reset():
+    wipeDB()
     start()
-    sample()
 #==========================================================
-
-from flask import Flask             #facilitate flask webserving
-from flask import render_template   #facilitate jinja templating
-import requests           #facilitate form submission
-
-#the conventional way:
-#from flask import Flask, render_template, request
-
-app = Flask(__name__)    #create Flask object
-
-key = 
-link = 'http://api.positionstack.com/v1/forward?access_key=5e990e9a2a02b3952708f993eaeb5c44&query=Copacabana&region=Rio+de+Janeiro&limit=1'
-print(link)
-r = requests.get(link) #new line at end of key file
-print(r.json())
-    
-
-

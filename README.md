@@ -20,5 +20,5 @@ Launch Codes:
 * python3 -m venv venv
 * venv/bin/activate
 * Run ```pip -r requirements.txt```
-* Run ```py __init__.py```  
+* Run ```python3 app/__init__.py```  
 * Open "localhost:5000" in your favorite browser
