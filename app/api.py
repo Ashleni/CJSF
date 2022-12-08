@@ -39,8 +39,8 @@ def longitude(location):
     
 
     
-print(longitude("new york city"))
-print(latitude("new york city"))
+#print(longitude("new york city"))
+#print(latitude("new york city"))
 
 
 #http://api.positionstack.com/v1/forward?access_key=5e990e9a2a02b3952708f993eaeb5c44&query=1600 Pennsylvania Ave NW, Washington DC

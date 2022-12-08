@@ -1,5 +1,8 @@
-import api
+import db
 
-api.reset()
-api.add_past_search("kevin", "ur mom's house")
-print(api.past_searches_for_user("kevin"))
+db.reset()
+db.add_past_search("kevin", "ur mom's house")
+print(db.past_searches_for_user("kevin"))
+print(db.past_searches_for_user("faiyaz"))
+print(db.user_exists("kevin"))
+print(db.user_exists("just a random"))
