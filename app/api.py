@@ -43,4 +43,30 @@ def longitude(location):
 #print(latitude("new york city"))
 
 
-#http://api.positionstack.com/v1/forward?access_key=5e990e9a2a02b3952708f993eaeb5c44&query=1600 Pennsylvania Ave NW, Washington DC
+
+#city bikes!
+
+def nearest_bikes(longitude, latitude):
+    link = "https://api.citybik.es/v2/networks"
+    r = requests.get(link)
+    info = r.json()
+    for row in info['networks']:
+        print(row['location']['city'] +": " + row['name'])
+
+#nearest_bikes()
+
+
+#open street map!
+
+def nameAndOperator(longitude, latitude):
+    link = "https://overpass-api.de/api/interpreter?[out:json];way(around:50," + latitude + "," + longitude + ");out;"
+    print(link)
+    #link = "https://overpass-api.de/api/interpreter?[out:json];way(around:50,40.755884,-73.978504);out;"
+    r = requests.get(link)
+    #info = r.json()
+    return r.text
+
+
+longitude = str(longitude("Stuyvesant High School"))
+latitude = str(latitude("Stuyvesant High School"))
+print(nameAndOperator(longitude, latitude))
