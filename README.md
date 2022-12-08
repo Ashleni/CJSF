@@ -22,3 +22,4 @@ Launch Codes:
 * Run ```pip -r requirements.txt```
 * Run ```python3 app/__init__.py```  
 * Open "localhost:5000" in your favorite browser
+

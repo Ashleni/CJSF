@@ -60,13 +60,39 @@ def nearest_bikes(longitude, latitude):
 
 def nameAndOperator(longitude, latitude):
     link = "https://overpass-api.de/api/interpreter?[out:json];way(around:50," + latitude + "," + longitude + ");out;"
-    print(link)
-    #link = "https://overpass-api.de/api/interpreter?[out:json];way(around:50,40.755884,-73.978504);out;"
-    r = requests.get(link)
+    #print(link)
+    link2 = 'https://overpass-api.de/api/interpreter'
+    query = """
+    [out:json];
+    way(around:50,40.755884,-73.978504);
+    out;
+    """
+    
     #info = r.json()
-    return r.text
+    r = requests.get(link2, params={'data': query})
+    print(r.url)
+    return r.json()
+    
+    
+def nearest_Amenities(latitude, longitude):
+    overpass_url = "http://overpass-api.de/api/interpreter"
+    overpass_query = """
+    [out:json];
+    way(around:1000,""" + latitude + """,""" + longitude + """);
+    out;
+    """
+    response = requests.get(overpass_url, 
+    params={'data': overpass_query})
+    print(response.url)
+    data = response.json()
+    final = ""
+    for x in range(len(data["elements"])):
+        if "tags" in data["elements"][x]:
+            if "name" in data["elements"][x]["tags"]:
+                final += str(data["elements"][x]["tags"]["name"]) + "\n"
+    return final
 
 
 longitude = str(longitude("Stuyvesant High School"))
 latitude = str(latitude("Stuyvesant High School"))
-print(nameAndOperator(longitude, latitude))
+print(nearest_Amenities(latitude, longitude))
