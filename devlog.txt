@@ -79,17 +79,24 @@ Shreya Roy -- 12/7/2022 12:30
 --------------------------------------------------------------
 	position stack api functions fully working (latitude / longitude)
 ==============================================================
-Kevin Wang -- 12/7/2022 12:30
+Kevin Wang -- 12/7/2022 14:00
 --------------------------------------------------------------
 	cleaned up codebase to be in compliance
 ==============================================================
-Justin Mohabir -- 12/7/2022 12:30
+Justin Mohabir -- 12/7/2022 14:00
 --------------------------------------------------------------
 	read up on bootstrap
 ==============================================================
 Shreya Roy -- 12/8/2022 14:00
 --------------------------------------------------------------
-	open street map API in progress ...
-
+	open street map API in progress ... -> got api call to openstreetmap working
+==============================================================
+Kevin Wang, Faiyaz Rafee-- 12/8/2022 14:00
+--------------------------------------------------------------
+	Login backend is working -> integrated front end with backend for login page
+==============================================================
+Justin Mohabir -- 12/7/2022 14:00
+--------------------------------------------------------------
+	created html/css with bootstrap for login form
 
 
