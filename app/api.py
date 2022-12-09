@@ -97,7 +97,29 @@ def nearest_Amenities(latitude, longitude, magnitude):
     return place_list
 
 
-longitude = longitude(" Antarctica ")
-latitude = latitude(" Antarctica")
+
+#yelp!
+def restaurants(latitude, longitude):
+    latitude = str(latitude)
+    longitude = str(longitude)
+    url = "https://api.yelp.com/v3/businesses/search?latitude=" + latitude + "&longitude=" + longitude + "&term=restaurant&sort_by=best_match&limit=20"
+    headers = {
+    "accept": "application/json",
+    "Authorization": "Bearer 3j_qPIkE1w9a0hDM1adjkt4P3yVUkqShLfwy-vJb3ZRGf157342vujvG0rLHQsZ2yjZtXKPFojNdnjZUvE3v3E7H9JY_6DOO0rI6GN8aw0KfKS-NGzpw9OBgWoOTY3Yx"
+    }
+    r = requests.get(url, headers=headers)
+    data  =  r.json()
+    place_list = []
+    for x in range(len(data["businesses"])):
+        if "name"  in data["businesses"][x] and data["businesses"][x]["name"] not in place_list:
+            place_list.append(str(data["businesses"][x]["name"]))
+    return place_list
+
+
+
+
+longitude = longitude(" 345 Chambers, NY, NY ")
+latitude = latitude(" 345 Chambers, NY, NY ")
 print(str(latitude) + "," + str(longitude))
-print(nearest_Amenities(latitude, longitude, 300))
+print(nearest_Amenities(latitude, longitude, 50))
+print(restaurants(latitude, longitude))
