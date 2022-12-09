@@ -71,8 +71,12 @@ def user_exists(a): #determines if user exists
         return False
 #==========================================================
 def register_user(username, password): #determines if input is valid to register, adds to users table if so
-    if user_exists(username) or len(username) == 0 or len(password) < 8:
-        return False
+    if user_exists(username):
+        return "user already exists"
+    elif len(username) == 0:
+        return "username can't be blank"
+    elif len(password) < 8:
+        return "password must be greater than 8 digits"
     else:
         db = sqlite3.connect(DB_FILE, check_same_thread=False) 
         c = db.cursor()
@@ -80,7 +84,7 @@ def register_user(username, password): #determines if input is valid to register
         c.executemany("INSERT INTO authentication VALUES(?, ?);", inserter)
         db.commit() #save changes
         db.close()
-        return True
+        return "success"
 
 #==========================================================
 def login_user(username, password): 

@@ -11,19 +11,21 @@ import db
 #from flask import Flask, render_template, request
 
 app = Flask(__name__)    #create Flask object
+# Set the secret key to some random bytes. Keep this really secret!
+app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 
 @app.route("/", methods=['GET', 'POST'])
-def disp_loginpage():
+def login():
     if "username" in session:
         redirect(url_for("home"))
         
     if request.method == "POST":
-        print("hi")
         if db.user_exists(request.form["username"]):
 
             #if valid -> send to home page
             if db.login_user(request.form["username"], request.form["password"]):
+                session["username"] = request.form["username"]
                 return redirect(url_for("home"))
             
             #not valid -> tell them an error message and show fresh form
@@ -35,37 +37,32 @@ def disp_loginpage():
             #show login form
         return render_template( 'login.html' )
 
+@app.route("/logout")
+def logout():
+    session.pop("username", None)
+    return redirect(url_for("login"))
 
-@app.route("/auth") # , methods=['GET', 'POST'])
-def authenticate():
-    print("\n\n\n")
-    print("***DIAG: this Flask obj ***")
-    print(app)
-    print("***DIAG: request obj ***")
-    print(request)
-    print("***DIAG: request.args ***")
-    print(request.args)
-    #print("***DIAG: request.args['username']  ***")
-    #print(request.args['username'])
-    print("***DIAG: request.headers ***")
-    print(request.headers)
-    return "Waaaa hooo HAAAH"  #response to a form submission
+@app.route("/register")
+def register():
+    if "username" in session:
+        redirect(url_for("home"))
+        
+    if request.method == "POST":
+        response = db.register_user(request.form["username"], request.form["password"])
+        if response == "success":
+            redirect(url_for("login"))
+        else:
+            render_template("register.html", error_message="response")
+    else: #get request
+            #show login form
+        return render_template( 'register.html' )
 
-@app.route("/home") # , methods=['GET', 'POST'])
+@app.route("/home")
 def home():
-    print("\n\n\n")
-    print("***DIAG: this Flask obj ***")
-    print(app)
-    print("***DIAG: request obj ***")
-    print(request)
-    print("***DIAG: request.args ***")
-    print(request.args)
-    #print("***DIAG: request.args['username']  ***")
-    #print(request.args['username'])
-    print("***DIAG: request.headers ***")
-    print(request.headers)
-    return "Waaaa hooo HAAAH"  #response to a form submission
-
+    if "username" not in session:
+        return redirect(url_for("login"))
+        
+    return render_template("home.html")
 
     
 if __name__ == "__main__": #false if this file imported as module
