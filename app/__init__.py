@@ -63,15 +63,27 @@ def register():
             #show login form
         return render_template( 'register.html' )
 
-@app.route("/home")
+@app.route("/home", methods=['GET'])
 def home():
     if "username" not in session:
         return redirect(url_for("login"))
     
-        
+    db.past_searches_for_user(session['username'])
+
+    return render_template("home.html")
+    
+
+@app.route("/dashboard", methods=['POST'])
+def dashboard():
+        db.add_past_search(session['username'],request.form['location'])
+        latitude = api.latitude(request.form['location'])
+        longitude = api.longitude(request.form['location'])
+        api.restaurants(latitude, longitude)
+        print(place_list)
     return render_template("home.html")
 
-    
+
+
 if __name__ == "__main__": #false if this file imported as module
     #enable debugging, auto-restarting of server when this file is modified
     app.debug = True 
