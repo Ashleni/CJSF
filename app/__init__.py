@@ -18,7 +18,7 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 @app.route("/", methods=['GET', 'POST'])
 def login():
     if "username" in session:
-        redirect(url_for("home"))
+        return redirect(url_for("home"))
         
     if request.method == "POST":
         if db.user_exists(request.form["username"]):
@@ -37,22 +37,28 @@ def login():
             #show login form
         return render_template( 'login.html' )
 
-@app.route("/logout")
+@app.route('/logout')
 def logout():
-    session.pop("username", None)
-    return redirect(url_for("login"))
+    # check if the user is logged in
+    if 'username' not in session:
+        return redirect(url_for("not_logged_in"))
 
-@app.route("/register")
+    # remove the username from the session if it's there
+    session.pop('username', None)
+    return redirect(url_for('login'))
+
+@app.route("/register", methods=['GET', 'POST'])
 def register():
     if "username" in session:
-        redirect(url_for("home"))
-        
+        return redirect(url_for("home"))
+
     if request.method == "POST":
         response = db.register_user(request.form["username"], request.form["password"])
+
         if response == "success":
-            redirect(url_for("login"))
+            return redirect(url_for("login"))
         else:
-            render_template("register.html", error_message="response")
+            return render_template("register.html", error_message=response)
     else: #get request
             #show login form
         return render_template( 'register.html' )
@@ -61,6 +67,7 @@ def register():
 def home():
     if "username" not in session:
         return redirect(url_for("login"))
+    
         
     return render_template("home.html")
 

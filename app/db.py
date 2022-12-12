@@ -80,8 +80,7 @@ def register_user(username, password): #determines if input is valid to register
     else:
         db = sqlite3.connect(DB_FILE, check_same_thread=False) 
         c = db.cursor()
-        inserter = [(username, password)]
-        c.executemany("INSERT INTO authentication VALUES(?, ?);", inserter)
+        c.execute("INSERT INTO authentication VALUES(?, ?);", (username, password))
         db.commit() #save changes
         db.close()
         return "success"
