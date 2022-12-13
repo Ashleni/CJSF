@@ -10,10 +10,19 @@ app = Flask(__name__)    #create Flask object
 
 
 
-
-
-
 #position stack!
+
+# returns list, latitude first, longitude second, both ints
+def coords(location):
+    key = open("keys/key_positionstack.txt", "r").read()
+    key = key.strip()
+    query = location
+    link = 'http://api.positionstack.com/v1/forward?access_key=' + key + '&query=' + query
+    r = requests.get(link) 
+    info = r.json()
+    latitude = info['data'][0]['latitude']
+    longitude = info['data'][0]['longitude']
+    return [latitude, longitude]
 
 # returns latitude as int of location
 # string detailing location with any amt of info needed
@@ -43,30 +52,25 @@ def longitude(location):
     return info['data'][0]['longitude']
     
 
-    
-#print(longitude("new york city"))
-#print(latitude("new york city"))
-
-
-
+'''
 #city bikes!
-
+# not being used anymore :'(
 def nearest_bikes(longitude, latitude):
     link = "https://api.citybik.es/v2/networks"
     r = requests.get(link)
     info = r.json()
     for row in info['networks']:
         print(row['location']['city'] +": " + row['name'])
-
+'''
 
 
 #open street map!
 
+'''
 #brokcen :'(
-#def nameAndOperator(longitude, latitude):
 def nameAndOperator(coords):
-    latitude = coords[0]
-    longitude = coords[1]
+    latitude = str(coords[0])
+    longitude = str(coords[1])
     link = "https://overpass-api.de/api/interpreter?[out:json];way(around:50," + latitude + "," + longitude + ");out;"
     #print(link)
     link2 = 'https://overpass-api.de/api/interpreter'
@@ -75,18 +79,17 @@ def nameAndOperator(coords):
     way(around:50,40.755884,-73.978504);
     out;
     """
-    
     #info = r.json()
     r = requests.get(link2, params={'data': query})
     print(r.url)
     return r.json()
-    
+''' 
     
 # returns list of nearest places, roads, buildings, etc. 
 # latitude, longitude, and magnitude (all ints) needed.
 def nearest_Amenities(coords, magnitude):
-    longitude = coords[1]
-    latitude = coords[0]
+    longitude = str(coords[1])
+    latitude = str(coords[0])
     overpass_url = "http://overpass-api.de/api/interpreter"
     overpass_query = """
     [out:json];way(around:""" + str(magnitude) + """,""" + latitude + """,""" + longitude + """);out;
@@ -104,13 +107,17 @@ def nearest_Amenities(coords, magnitude):
 
 
 #yelp!
+
+# returns dictionary of restaurants, key is restaurant name and value is coord list (latitude, longitude). ALL STRINGS
 def restaurants(coords):
-    latitude = coords[0]
-    longitude = coords[1]
+    latitude = str(coords[0])
+    longitude = str(coords[1])
+    key = open("keys/key_yelp.txt", "r").read()
+    key = key.strip()
     url = "https://api.yelp.com/v3/businesses/search?latitude=" + latitude + "&longitude=" + longitude + "&term=restaurant&sort_by=best_match&limit=20"
     headers = {
     "accept": "application/json",
-    "Authorization": "Bearer 3j_qPIkE1w9a0hDM1adjkt4P3yVUkqShLfwy-vJb3ZRGf157342vujvG0rLHQsZ2yjZtXKPFojNdnjZUvE3v3E7H9JY_6DOO0rI6GN8aw0KfKS-NGzpw9OBgWoOTY3Yx"
+    "Authorization": "Bearer " + key
     }
     r = requests.get(url, headers=headers)
     data  =  r.json()
@@ -132,9 +139,8 @@ def restaurants(coords):
 
 
 
-    # FIX IT AT HOME MAKE LONGITIUDW AND LATITUDE THE SAME 
 longitude = longitude(" 345 Chambers, NY, NY ")
 latitude = latitude(" 345 Chambers, NY, NY  ")
 print(str(latitude) + "," + str(longitude))
 #print(nearest_Amenities(latitude, longitude, 50))
-print(restaurants(latitude, longitude))
+print(restaurants(coords("345 Chambers, NY, NY")))
