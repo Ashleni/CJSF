@@ -15,7 +15,7 @@ app = Flask(__name__)    #create Flask object
 # returns list, latitude first, longitude second, both ints
 def coords(location):
     
-    key = open("keys/key_positionstack.txt", "r").read()
+    key = open("app/keys/key_positionstack.txt", "r").read()
     key = key.strip()
 
     query = location
@@ -29,7 +29,7 @@ def coords(location):
 # returns latitude as int of location
 # string detailing location with any amt of info needed
 def latitude(location):
-    key = open("keys/key_positionstack.txt", "r").read()
+    key = open("app/keys/key_positionstack.txt", "r").read()
     key = key.strip()
     query = location
     link = 'http://api.positionstack.com/v1/forward?access_key=' + key + '&query=' + query
@@ -43,7 +43,7 @@ def latitude(location):
 # returns longitude as int of location
 # string detailing location with any amt of info needed
 def longitude(location):
-    key = open("keys/key_positionstack.txt", "r").read()
+    key = open("app/keys/key_positionstack.txt", "r").read()
     key = key.strip()
     query = location
     link = 'http://api.positionstack.com/v1/forward?access_key=' + key + '&query=' + query
@@ -116,7 +116,7 @@ def nearest_Amenities(coords, magnitude):
 def restaurants(coords):
     latitude = str(coords[0])
     longitude = str(coords[1])
-    key = open("keys/key_yelp.txt", "r").read()
+    key = open("app/keys/key_yelp.txt", "r").read()
     key = key.strip()
     url = "https://api.yelp.com/v3/businesses/search?latitude=" + latitude + "&longitude=" + longitude + "&term=restaurant&sort_by=best_match&limit=20"
     headers = {

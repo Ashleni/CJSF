@@ -127,5 +127,5 @@ ehthumbs.db
 **/*[\\/\:;*?!'"<>|$º•¶§∞¢£]*
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-keys/key_positionstack.txt
-keys/key_yelp.txt
+app/keys/key_positionstack.txt
+app/keys/key_yelp.txt
