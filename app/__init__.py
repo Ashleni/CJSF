@@ -80,7 +80,7 @@ def dashboard():
         longitude = api.longitude(request.form['location'])
         api.restaurants(latitude, longitude)
         print(place_list)
-    return render_template("home.html")
+        return render_template("home.html")
 
 
 
