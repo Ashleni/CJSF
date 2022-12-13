@@ -14,8 +14,10 @@ app = Flask(__name__)    #create Flask object
 
 # returns list, latitude first, longitude second, both ints
 def coords(location):
+    
     key = open("keys/key_positionstack.txt", "r").read()
     key = key.strip()
+
     query = location
     link = 'http://api.positionstack.com/v1/forward?access_key=' + key + '&query=' + query
     r = requests.get(link) 

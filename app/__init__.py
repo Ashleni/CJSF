@@ -75,14 +75,18 @@ def home():
 
 @app.route("/dashboard", methods=['POST'])
 def dashboard():
-    db.add_past_search(session['username'],request.form['location'])
-    coords = api.coords(request.form['location'])
+    try:
+    
+        db.add_past_search(session['username'],request.form['location'])
+        coords = api.coords(request.form['location'])
 
-    restaurants = api.restaurants(coords)
-    amenities = api.nearest_Amenities(coords, 100)
+        restaurants = api.restaurants(coords)
+        amenities = api.nearest_Amenities(coords, 100)
 
-    print(amenities)
-    return render_template("dashboard.html", restaurants=restaurants, amenities=amenities)
+        print(amenities)
+        return render_template("dashboard.html", restaurants=restaurants, amenities=amenities)
+    except:
+        return "An error has occured. Did you use a blank or incorrect key in keys/positionstack.txt or in key_yelp.txt?"
 
 
 
