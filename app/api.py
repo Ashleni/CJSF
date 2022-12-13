@@ -91,13 +91,15 @@ def nearest_Amenities(coords, magnitude):
     longitude = str(coords[1])
     latitude = str(coords[0])
     overpass_url = "http://overpass-api.de/api/interpreter"
-    overpass_query = """
-    [out:json];way(around:""" + str(magnitude) + """,""" + latitude + """,""" + longitude + """);out;
+    overpass_query = f"""
+    [out:json];
+    way(around:{magnitude},{latitude},{longitude});
+    out;
     """
     response = requests.get(overpass_url, params={'data': overpass_query})
-    print(response.url)
+
     data = response.json()
-    #pprint(data)
+    pprint(data)
     place_list = []
     for x in range(len(data["elements"])):
         if  "tags" in data["elements"][x] and "name" in data["elements"][x]["tags"] and data["elements"][x]["tags"]["name"] not in place_list:
@@ -138,9 +140,10 @@ def restaurants(coords):
     '''
 
 
-
+"""
 longitude = longitude(" 345 Chambers, NY, NY ")
 latitude = latitude(" 345 Chambers, NY, NY  ")
 print(str(latitude) + "," + str(longitude))
 #print(nearest_Amenities(latitude, longitude, 50))
 print(restaurants(coords("345 Chambers, NY, NY")))
+"""

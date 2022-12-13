@@ -7,6 +7,7 @@ from flask import render_template   #facilitate jinja templating
 from flask import request           #facilitate form submission
 from flask import session, redirect, url_for
 import db
+import api
 #the conventional way:
 #from flask import Flask, render_template, request
 
@@ -67,20 +68,21 @@ def register():
 def home():
     if "username" not in session:
         return redirect(url_for("login"))
-    
-    db.past_searches_for_user(session['username'])
 
+    db.past_searches_for_user(session['username'])
     return render_template("home.html")
     
 
 @app.route("/dashboard", methods=['POST'])
 def dashboard():
-        db.add_past_search(session['username'],request.form['location'])
-        latitude = api.latitude(request.form['location'])
-        longitude = api.longitude(request.form['location'])
-        api.restaurants(latitude, longitude)
-        print(place_list)
-    return render_template("home.html")
+    db.add_past_search(session['username'],request.form['location'])
+    coords = api.coords(request.form['location'])
+
+    restaurants = api.restaurants(coords)
+    amenities = api.nearest_Amenities(coords, 100)
+
+    print(amenities)
+    return render_template("dashboard.html", restaurants=restaurants, amenities=amenities)
 
 
 
