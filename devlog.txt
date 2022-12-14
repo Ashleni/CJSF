@@ -115,11 +115,11 @@ Justin Mohabir -- 12/12/2022 14:00
 --------------------------------------------------------------
 	created html/css with bootstrap for home page
 ==============================================================
-Shreya Roy, Justin Mohabir -- 12/12/2022 18:00
+Shreya Roy, Justin Mohabir -- 12/13/2022 14:00
 -------------------------------------------------------------
 	worked together to create navbar, history box on home page
 ==============================================================
-Kevin Wang, Faiyaz Rafee-- 12/12/2022 14:00
+Kevin Wang, Faiyaz Rafee-- 12/13/2022 14:00
 --------------------------------------------------------------
 	loading info from the api -> flask app -> displayed on dashboard page done
 ==============================================================
