@@ -5,6 +5,8 @@
 
 import sqlite3   #enable control of an sqlite database
 DB_FILE="database.db"
+db = sqlite3.connect(DB_FILE)
+c = db.cursor()
 #===========================MOCK STATIC DATABASE TO POPULATE ROUTES W/ DATA=============================== 
 def wipeDB():
     db = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create

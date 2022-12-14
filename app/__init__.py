@@ -20,7 +20,6 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 def login():
     if "username" in session:
         return redirect(url_for("home"))
-        
     if request.method == "POST":
         if db.user_exists(request.form["username"]):
 
