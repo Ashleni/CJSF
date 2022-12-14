@@ -6,6 +6,7 @@ from flask import Flask             #facilitate flask webserving
 from flask import render_template   #facilitate jinja templating
 from flask import request           #facilitate form submission
 from flask import session, redirect, url_for
+import os                           #facilitate key generation
 import db
 import api
 #the conventional way:
@@ -13,7 +14,7 @@ import api
 
 app = Flask(__name__)    #create Flask object
 # Set the secret key to some random bytes. Keep this really secret!
-app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
+app.secret_key = os.urandom(32)
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -69,13 +70,13 @@ def home():
         return redirect(url_for("login"))
 
     db.past_searches_for_user(session['username'])
-    return render_template("home.html")
+    return render_template("home.html", past_searches=db.past_searches_for_user(session['username']))
     
 
 @app.route("/dashboard", methods=['POST'])
 def dashboard():
     try:
-    
+
         db.add_past_search(session['username'],request.form['location'])
         coords = api.coords(request.form['location'])
 
