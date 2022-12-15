@@ -85,8 +85,9 @@ def dashboard():
 
         print(amenities)
         return render_template("dashboard.html", restaurants=restaurants, amenities=amenities)
-    except:
-        return "An error has occured. Did you use a blank or incorrect key in keys/positionstack.txt or in key_yelp.txt?"
+    except Exception as e:
+        print(e)
+        return "An error has occured. Did you use a blank or incorrect key in keys/key_positionstack.txt or in key_yelp.txt?"
 
 
 
