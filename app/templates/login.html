@@ -25,11 +25,11 @@
             <label for="exampleInput1" class="form-label">Username</label>
             <!-- This is a form-->
             <input class="form-control" id="exampleInput1" type="text" placeholder="enter username" name="username">
-            <div id="emailHelp" class="form-text">Forgot Username? Too bad</div>
+            <div id="emailHelp" class="form-text"><p class="text-danger">{{error_user}}</p></div>
             <br>
             <label for="exampleInput2" class="form-label">Password</label>
-            <input class="form-control" id="exampleInput2" type="text" placeholder="enter password" name="password" input type=”hidden”>
-            <div id="emailHelp" class="form-text">Forgot Password? Too bad</div>
+            <input class="form-control" id="exampleInput2" type="password" placeholder="enter password" name="password" input type=”password”>
+            <div id="emailHelp" class="form-text"><p class="text-danger">{{error_password}}</p></div>
             
           </div>
   

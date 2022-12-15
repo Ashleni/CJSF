@@ -31,9 +31,9 @@ def login():
             
             #not valid -> tell them an error message and show fresh form
             else:
-                return render_template( 'login.html', error_message="Incorrect password!")
+                return render_template( 'login.html', error_password="Incorrect password!")
         else:
-            return render_template("login.html", error_message="User doesn't exist!")        
+            return render_template("login.html", error_user="User doesn't exist!")        
     else: #get request
             #show login form
         return render_template( 'login.html' )
