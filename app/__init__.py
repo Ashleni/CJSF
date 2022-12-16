@@ -9,12 +9,14 @@ from flask import session, redirect, url_for
 import os                           #facilitate key generation
 import db
 import api
+import traceback
 #the conventional way:
 #from flask import Flask, render_template, request
 
 app = Flask(__name__)    #create Flask object
 # Set the secret key to some random bytes. Keep this really secret!
-app.secret_key = os.urandom(32)
+app.secret_key = "abcdef"
+#app.secret_key = os.urandom(32)
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -69,8 +71,7 @@ def home():
     if "username" not in session:
         return redirect(url_for("login"))
 
-    db.past_searches_for_user(session['username'])
-    return render_template("home.html", past_searches=db.past_searches_for_user(session['username']))
+    return render_template("home.html", past_searches=db.past_searches_for_user(session['username'])[::-1])
     
 
 @app.route("/dashboard", methods=['POST'])
@@ -84,9 +85,9 @@ def dashboard():
         amenities = api.nearest_Amenities(coords, 100)
 
         print(amenities)
-        return render_template("dashboard.html", restaurants=restaurants, amenities=amenities)
+        return render_template("dashboard.html", restaurants=restaurants, amenities=amenities, past_searches=db.past_searches_for_user(session['username'])[::-1])
     except Exception as e:
-        print(e)
+        traceback.print_exc()
         return "An error has occured. Did you use a blank or incorrect key in keys/key_positionstack.txt or in key_yelp.txt?"
 
 
