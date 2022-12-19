@@ -83,6 +83,7 @@ def dashboard():
 
         restaurants = api.restaurants(coords)
         amenities = api.nearest_Amenities(coords, 100)
+        users = db.users_who_searched(request.form['location'])
 
         print(amenities)
         return render_template("dashboard.html", restaurants=restaurants, amenities=amenities, past_searches=db.past_searches_for_user(session['username'])[::-1])
