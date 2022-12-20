@@ -78,8 +78,6 @@ def nearest_Amenities(coords, magnitude):
             place_list.append(str(data["elements"][x]["tags"]["name"]))
     return place_list
 
-
-
 #yelp!
 
 # returns dictionary of restaurants, key is restaurant name and value is coord list (latitude, longitude). ALL STRINGS
