@@ -86,7 +86,7 @@ def dashboard():
         users = db.users_who_searched(request.form['location'])
 
         print(amenities)
-        return render_template("dashboard.html", restaurants=restaurants, amenities=amenities, past_searches=db.past_searches_for_user(session['username'])[::-1])
+        return render_template("dashboard.html", centerLat = coords[0], centerLong = coords[1], restaurants=restaurants, amenities=amenities, past_searches=db.past_searches_for_user(session['username'])[::-1])
     except Exception as e:
         traceback.print_exc()
         return "An error has occured. Did you use a blank or incorrect key in keys/key_positionstack.txt or in key_yelp.txt?"

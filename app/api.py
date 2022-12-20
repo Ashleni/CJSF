@@ -120,7 +120,7 @@ def restaurants(coords):
 #print(nearest_Amenities(latitude, longitude, 50))
 #print(restaurants(coords("345 Chambers, NY, NY")))
 #print(coords("345 Chambers, NY, NY"))
-print(nearest_Amenities(coords("345 Chambers, NY, NY"), 50))
+#print(nearest_Amenities(coords("345 Chambers, NY, NY"), 50))
 
 
 
