@@ -47,8 +47,7 @@ def longitude(location):
     return info['data'][0]['longitude']
     
     
-# returns list of nearest places, roads, buildings, etc. 
-# latitude, longitude, and magnitude (all ints) needed.
+# returns dictionary of nearest amenities, key is amenity name and value is coord list (latitude, longitude). ALL STRINGS
 def nearest_Amenities(coords, magnitude):
     longitude = str(coords[1])
     latitude = str(coords[0])
