@@ -33,8 +33,8 @@ class Location {
   }
   calculateXY(centerLat, centerLong) {
 
-  	this.X = this.centerX - 4000 * (centerLat - this.latitude)
-    this.Y = this.centerY - 4000 * (centerLong - this.longitude)
+  	this.X = this.centerX - 4000 * (centerLong - this.longitude)
+    this.Y = this.centerY + 4000 * (centerLat - this.latitude)
   }
  
  redrawOthers() {

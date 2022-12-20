@@ -9,7 +9,6 @@ from flask import session, redirect, url_for
 import os                           #facilitate key generation
 import db
 import api
-import traceback
 #the conventional way:
 #from flask import Flask, render_template, request
 
@@ -80,12 +79,12 @@ def dashboard():
 
         db.add_past_search(session['username'],request.form['location'])
         coords = api.coords(request.form['location'])
-
+        print(coords)
         restaurants = api.restaurants(coords)
         amenities = api.nearest_Amenities(coords, 100)
         users = db.users_who_searched(request.form['location'])
 
-        print(amenities)
+        #print(amenities)
         return render_template("dashboard.html", centerLat = coords[0], centerLong = coords[1], restaurants=restaurants, amenities=amenities, past_searches=db.past_searches_for_user(session['username'])[::-1])
     except Exception as e:
         traceback.print_exc()

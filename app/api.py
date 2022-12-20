@@ -61,7 +61,7 @@ def nearest_Amenities(coords, magnitude):
     """
     response = requests.get(overpass_url, params={'data': overpass_query})
     data = response.json()
-    pprint(data)
+    #pprint(data)
     place_list = []
     for x in range(len(data["elements"])):
         if  "tags" in data["elements"][x] and "name" in data["elements"][x]["tags"] and data["elements"][x]["tags"]["name"] not in place_list:
