@@ -47,8 +47,7 @@ def longitude(location):
     return info['data'][0]['longitude']
     
     
-# returns list of nearest places, roads, buildings, etc. 
-# latitude, longitude, and magnitude (all ints) needed.
+# returns dictionary of nearest amenities, key is amenity name and value is coord list (latitude, longitude). ALL STRINGS
 def nearest_Amenities(coords, magnitude):
     longitude = str(coords[1])
     latitude = str(coords[0])
@@ -61,12 +60,13 @@ def nearest_Amenities(coords, magnitude):
     """
     response = requests.get(overpass_url, params={'data': overpass_query})
     data = response.json()
-    #pprint(data)
-    place_list = []
+    pprint(data)
+    place_dict = {}
     for x in range(len(data["elements"])):
-        if  "tags" in data["elements"][x] and "name" in data["elements"][x]["tags"] and data["elements"][x]["tags"]["name"] not in place_list:
-            place_list.append(str(data["elements"][x]["tags"]["name"]))
-    return place_list
+        if  "tags" in data["elements"][x] and "name" in data["elements"][x]["tags"] and data["elements"][x]["tags"]["name"] not in place_dict:
+            coords = [str(data["elements"][x]["geometry"][0]["lat"]), str(data["elements"][x]["geometry"][0]["lon"])]
+            place_dict[str(data["elements"][x]["tags"]["name"])] = coords
+    return place_dict
 
 '''
 #open street map
@@ -120,7 +120,7 @@ def restaurants(coords):
 #print(nearest_Amenities(latitude, longitude, 50))
 #print(restaurants(coords("345 Chambers, NY, NY")))
 #print(coords("345 Chambers, NY, NY"))
-#print(nearest_Amenities(coords("345 Chambers, NY, NY"), 50))
+print(nearest_Amenities(coords("345 Chambers, NY, NY"), 50))
 
 
 
