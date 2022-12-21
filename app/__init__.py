@@ -87,6 +87,7 @@ def dashboard():
         #print(amenities)
         return render_template("dashboard.html", centerLat = coords[0], centerLong = coords[1], restaurants=restaurants, \
         amenities=amenities, past_searches=db.past_searches_for_user(session['username'])[::-1], \
+        users= users, \
         location = request.form['location'], latitude = api.latitude(request.form['location']), longitude = api.longitude(request.form['location']) )
     except Exception as e:
         traceback.print_exc()
