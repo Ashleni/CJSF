@@ -46,38 +46,39 @@ def longitude(location):
     info = r.json()
     return info['data'][0]['longitude']
     
-
-'''
-#city bikes!
-# not being used anymore :'(
-def nearest_bikes(longitude, latitude):
-    link = "https://api.citybik.es/v2/networks"
-    r = requests.get(link)
-    info = r.json()
-    for row in info['networks']:
-        print(row['location']['city'] +": " + row['name'])
-'''
     
-# returns list of nearest places, roads, buildings, etc. 
-# latitude, longitude, and magnitude (all ints) needed.
+# returns dictionary of nearest amenities, key is amenity name and value is coord list (latitude, longitude). ALL STRINGS
 def nearest_Amenities(coords, magnitude):
     longitude = str(coords[1])
     latitude = str(coords[0])
     overpass_url = "http://overpass-api.de/api/interpreter"
     overpass_query = f"""
     [out:json];
-    way(around:{magnitude},{latitude},{longitude});
-    out;
+    (way(around:{magnitude},{latitude},{longitude});
+    );
+    out geom;
     """
     response = requests.get(overpass_url, params={'data': overpass_query})
     data = response.json()
     pprint(data)
-    place_list = []
+    place_dict = {}
     for x in range(len(data["elements"])):
-        if  "tags" in data["elements"][x] and "name" in data["elements"][x]["tags"] and data["elements"][x]["tags"]["name"] not in place_list:
-            place_list.append(str(data["elements"][x]["tags"]["name"]))
-    return place_list
+        if  "tags" in data["elements"][x] and "name" in data["elements"][x]["tags"] and data["elements"][x]["tags"]["name"] not in place_dict:
+            coords = [str(data["elements"][x]["geometry"][0]["lat"]), str(data["elements"][x]["geometry"][0]["lon"])]
+            place_dict[str(data["elements"][x]["tags"]["name"])] = coords
+    return place_dict
 
+'''
+#open street map
+def near(coords, magnitude):
+    longitude = str(coords[1])
+    latitude = str(coords[0])
+    url = "https://www.openstreetmap.org/#map=" + str(magnitude) + "/" + latitude + "/" + longitude
+    r = requests.get(url)
+    print(url)
+    data = r.json()
+    pprint(data)
+'''
 
 
 #yelp!
@@ -112,13 +113,14 @@ def restaurants(coords):
     '''
 
 
-"""#test commands!
-longitude = longitude(" 345 Chambers, NY, NY ")
-latitude = latitude(" 345 Chambers, NY, NY  ")
-print(str(latitude) + "," + str(longitude))
+#test commands!
+#longitude = longitude(" 345 Chambers, NY, NY ")
+#latitude = latitude(" 345 Chambers, NY, NY  ")
+#print(str(latitude) + "," + str(longitude))
 #print(nearest_Amenities(latitude, longitude, 50))
-print(restaurants(coords("345 Chambers, NY, NY")))
-"""
+#print(restaurants(coords("345 Chambers, NY, NY")))
+#print(coords("345 Chambers, NY, NY"))
+print(nearest_Amenities(coords("345 Chambers, NY, NY"), 50))
 
 
 
@@ -142,3 +144,14 @@ def nameAndOperator(coords):
     print(r.url)
     return r.json()
 ''' 
+
+'''
+#city bikes!
+# not being used anymore :'(
+def nearest_bikes(longitude, latitude):
+    link = "https://api.citybik.es/v2/networks"
+    r = requests.get(link)
+    info = r.json()
+    for row in info['networks']:
+        print(row['location']['city'] +": " + row['name'])
+'''
