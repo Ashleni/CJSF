@@ -60,7 +60,7 @@ def nearest_Amenities(coords, magnitude):
     """
     response = requests.get(overpass_url, params={'data': overpass_query})
     data = response.json()
-    pprint(data)
+    #pprint(data)
     place_dict = {}
     for x in range(len(data["elements"])):
         if  "tags" in data["elements"][x] and "name" in data["elements"][x]["tags"] and data["elements"][x]["tags"]["name"] not in place_dict:
@@ -96,7 +96,7 @@ def restaurants(coords):
     }
     r = requests.get(url, headers=headers)
     data  =  r.json()
-    #pprint(data)
+    pprint(data)
     place_dict = {}
     for x in range(len(data["businesses"])):
         if "name" in data["businesses"][x] and data["businesses"][x]["name"] not in place_dict:
@@ -120,7 +120,7 @@ def restaurants(coords):
 #print(nearest_Amenities(latitude, longitude, 50))
 #print(restaurants(coords("345 Chambers, NY, NY")))
 #print(coords("345 Chambers, NY, NY"))
-print(nearest_Amenities(coords("345 Chambers, NY, NY"), 50))
+#print(nearest_Amenities(coords("345 Chambers, NY, NY"), 50))
 
 
 
