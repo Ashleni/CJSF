@@ -106,6 +106,20 @@
       <div class="p-3 flex-grow-1"></div>
     </div>
 
+    <div class="container border border-primary p-3 mb-3">
+      <div class="places">
+        <center>
+          <p class="display-6" style="margin-bottom:0;">Also Viewed By</p>
+          <p class="text-muted" style="font-size: 0.9rem">Sometimes other search things</p>
+        </center>
+        <!--openstreet map places here-->
+        {% for i in users %}
+          <div>{{i}}</div>
+        {% endfor %}
+      </div>
+    </div>
+
+
 
 
 
