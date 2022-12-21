@@ -29,12 +29,12 @@ def login():
             if db.login_user(request.form["username"], request.form["password"]):
                 session["username"] = request.form["username"]
                 return redirect(url_for("home"))
-            
+
             #not valid -> tell them an error message and show fresh form
             else:
                 return render_template( 'login.html', error_password="Incorrect password!")
         else:
-            return render_template("login.html", error_user="User doesn't exist!")        
+            return render_template("login.html", error_user="User doesn't exist!")
     else: #get request
             #show login form
         return render_template( 'login.html' )
@@ -71,7 +71,7 @@ def home():
         return redirect(url_for("login"))
 
     return render_template("home.html", past_searches=db.past_searches_for_user(session['username'])[::-1])
-    
+
 
 @app.route("/dashboard", methods=['POST'])
 def dashboard():
@@ -85,7 +85,9 @@ def dashboard():
         users = db.users_who_searched(request.form['location'])
 
         #print(amenities)
-        return render_template("dashboard.html", centerLat = coords[0], centerLong = coords[1], restaurants=restaurants, amenities=amenities, past_searches=db.past_searches_for_user(session['username'])[::-1])
+        return render_template("dashboard.html", centerLat = coords[0], centerLong = coords[1], restaurants=restaurants, \
+        amenities=amenities, past_searches=db.past_searches_for_user(session['username'])[::-1], \
+        location = request.form['location'], latitude = api.latitude(request.form['location']), longitude = api.longitude(request.form['location']) )
     except Exception as e:
         traceback.print_exc()
         return "An error has occured. Did you use a blank or incorrect key in keys/key_positionstack.txt or in key_yelp.txt?"
@@ -94,5 +96,5 @@ def dashboard():
 
 if __name__ == "__main__": #false if this file imported as module
     #enable debugging, auto-restarting of server when this file is modified
-    app.debug = True 
+    app.debug = True
     app.run()
