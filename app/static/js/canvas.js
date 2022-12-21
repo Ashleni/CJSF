@@ -5,7 +5,7 @@ function makeSVG(html){
 
     var data = '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">' +
       '<foreignObject width="100%" height="100%">' +
-      '<div xmlns="http://www.w3.org/1999/xhtml" style="font-size:12px; border: 1px solid black">' +
+      '<div xmlns="http://www.w3.org/1999/xhtml" style="font-size:12px; color: green; border: 1px solid green">' +
       html +
       '</div>' +
       '</foreignObject>' +
@@ -15,17 +15,24 @@ function makeSVG(html){
     }
     
 class Location {
-  constructor(latitude, longitude, placeName, centerLat, centerLong) {
+  constructor(latitude, longitude, placeName, centerLat, centerLong, isCenter, isRestaurant) {
     this.latitude = latitude
     this.longitude = longitude
-    this.centerX = 250
-    this.centerY = 150
+    this.centerX = 400
+    this.centerY = 300
     this.placeName = placeName
     this.circleClicked = false
     this.calculateXY(centerLat, centerLong)
 
 		this.circle = new Path2D();
-    this.circle.arc(this.X, this.Y, 5, 0, 2 * Math.PI);
+
+    if (isCenter) {
+      this.circle.arc(this.X, this.Y, 10, 0, 2 * Math.PI);
+    } else {
+      this.circle.arc(this.X, this.Y, 5, 0, 2 * Math.PI);
+    }
+    this.isCenter = isCenter
+    this.isRestaurant = isRestaurant
   }
   
   addOthers(others) {
@@ -33,8 +40,8 @@ class Location {
   }
   calculateXY(centerLat, centerLong) {
 
-  	this.X = this.centerX - 4000 * (centerLong - this.longitude)
-    this.Y = this.centerY + 4000 * (centerLat - this.latitude)
+  	this.X = this.centerX - 25000 * (centerLong - this.longitude)
+    this.Y = this.centerY + 25000 * (centerLat - this.latitude)
   }
  
  redrawOthers() {
@@ -45,8 +52,18 @@ class Location {
   
 
   placeCircle() {
+
+    
     // Create circle
-    ctx.fillStyle = 'red';
+    if (this.isRestaurant) {
+      ctx.fillStyle = 'blue';
+    } else {
+      ctx.fillStyle = 'red';
+    }
+
+    if (this.isCenter) {
+      ctx.fillStyle = 'green';
+    }
     ctx.fill(this.circle);
 	}
   
@@ -61,6 +78,10 @@ class Location {
 		
     const centerX = this.centerX
     const centerY = this.centerY
+
+    const isCenter = this.isCenter
+    const isRestaurant = this.isRestaurant
+
     canvas.addEventListener('click', function(event) {
       // Check whether point is inside circle
       var data = makeSVG(`
@@ -77,14 +98,22 @@ class Location {
 
 		if (ctx.isPointInPath(circle, event.offsetX, event.offsetY)) {
       if (this.circleClicked) {
-        ctx.fillStyle = 'red';
+        if (isCenter) {
+          ctx.fillStyle = 'purple';
+        }
+        // Create circle
+        if (isRestaurant) {
+          ctx.fillStyle = 'blue';
+        } else {
+          ctx.fillStyle = 'red';
+        }
       } else {
         ctx.fillStyle = 'green';
 
       }
 
       if (this.circleClicked) {
-        ctx.clearRect(0, 0, 500, 300);
+        ctx.clearRect(0, 0, 800, 600);
         for (let i = 0; i < others.length; i++) {
           others[i].placeCircle()
         }
@@ -114,29 +143,42 @@ class Location {
   }
 }
 
-function initalize(centerLat, centerLong, otherLocations) {
+function initalize(centerLat, centerLong, otherLocations, amenities) {
     console.log(otherLocations)
-    const center = new Location(centerLat, centerLong, "Your location", centerLat, centerLong)
-    center.placeCircle()
+    const center = new Location(centerLat, centerLong, "Your location", centerLat, centerLong, true, false)
+    
 
     allCircles = []
 
-    allCircles.push(center)
 
-    const places = Object.keys(otherLocations)
-    for (let i = 0; i < places.length; i++) {
-        const location = places[i]
+    const restaurant = Object.keys(otherLocations)
+    for (let i = 0; i < restaurant.length; i++) {
+        const location = restaurant[i]
         const coordinates = otherLocations[location]
-        console.log(coordinates)
-        const place1 = new Location(coordinates[0], coordinates[1], location, centerLat, centerLong)
-    place1.placeCircle()
-    allCircles.push(place1)
-    }
 
+        const place1 = new Location(coordinates[0], coordinates[1], location, centerLat, centerLong, false, true)
+        place1.placeCircle()
+        allCircles.push(place1)
+    }
+    
+    const amenity = Object.keys(amenities)
+    for (let i = 0; i < amenity.length; i++) {
+
+      const location = amenity[i]
+
+      const coordinates = amenities[location]
+
+      const place1 = new Location(coordinates[0], coordinates[1], location, centerLat, centerLong, false, false)
+      place1.placeCircle()
+      allCircles.push(place1)
+    }
+    
+    center.placeCircle()
+    allCircles.push(center)
     center.attach()
     for (let i = 0; i < allCircles.length; i++) {
-        const place = allCircles[i]
-    place.addOthers(allCircles)
-    place.attach()
+      const place = allCircles[i]
+      place.addOthers(allCircles)
+      place.attach()
     }
 }

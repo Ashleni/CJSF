@@ -148,7 +148,7 @@ def restaurantInfo(coords):
     data  =  r.json()
     #pprint(data)
     place_dict = {}
-    pprint(data)
+    #pprint(data)
     for x in range(len(data["businesses"])):
         if "name" in data["businesses"][x] and data["businesses"][x]["name"] not in place_dict:
             address = str(data["businesses"][x]["location"]["display_address"][0]) + ", " + str(data["businesses"][x]["location"]["display_address"][1])
@@ -172,7 +172,7 @@ def restaurantInfo(coords):
 #latitude = latitude(" 345 Chambers, NY, NY  ")
 #print(str(latitude) + "," + str(longitude))
 #print(nearest_Amenities(latitude, longitude, 50))
-print(restaurantInfo(coords("345 Chambers, NY, NY")))
+#print(restaurantInfo(coords("345 Chambers, NY, NY")))
 #print(coords("345 Chambers, NY, NY"))
 #print(nearest_Amenities(coords("345 Chambers, NY, NY"), 50))
 
