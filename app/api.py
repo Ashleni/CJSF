@@ -60,7 +60,8 @@ def nearest_Amenities(coords, magnitude):
     """
     response = requests.get(overpass_url, params={'data': overpass_query})
     data = response.json()
-    pprint(data)
+    #pprint(data)
+    #pprint(data)
     place_dict = {}
     for x in range(len(data["elements"])):
         if  "tags" in data["elements"][x] and "name" in data["elements"][x]["tags"] and data["elements"][x]["tags"]["name"] not in place_dict:
@@ -96,7 +97,7 @@ def restaurants(coords):
     }
     r = requests.get(url, headers=headers)
     data  =  r.json()
-    #pprint(data)
+    pprint(data)
     place_dict = {}
     for x in range(len(data["businesses"])):
         if "name" in data["businesses"][x] and data["businesses"][x]["name"] not in place_dict:
@@ -111,6 +112,27 @@ def restaurants(coords):
             place_list.append(str(data["businesses"][x]["name"]))
     return place_list
     '''
+    
+# returns dictionary of restaurants, key is restaurant name and value is address. ALL STRINGS
+def restaurantsAddress(coords):
+    latitude = str(coords[0])
+    longitude = str(coords[1])
+    key = open("app/keys/key_yelp.txt", "r").read()
+    key = key.strip()
+    url = "https://api.yelp.com/v3/businesses/search?latitude=" + latitude + "&longitude=" + longitude + "&term=restaurant&sort_by=best_match&limit=20"
+    headers = {
+    "accept": "application/json",
+    "Authorization": "Bearer " + key
+    }
+    r = requests.get(url, headers=headers)
+    data  =  r.json()
+    #pprint(data)
+    place_dict = {}
+    for x in range(len(data["businesses"])):
+        if "name" in data["businesses"][x] and data["businesses"][x]["name"] not in place_dict:
+            address = str(data["businesses"][x]["location"]["display_address"][0]) + ", " + str(data["businesses"][x]["location"]["display_address"][1])
+            place_dict[str(data["businesses"][x]["name"])] = address
+    return place_dict
 
 
 #test commands!
@@ -120,7 +142,7 @@ def restaurants(coords):
 #print(nearest_Amenities(latitude, longitude, 50))
 #print(restaurants(coords("345 Chambers, NY, NY")))
 #print(coords("345 Chambers, NY, NY"))
-print(nearest_Amenities(coords("345 Chambers, NY, NY"), 50))
+#print(nearest_Amenities(coords("345 Chambers, NY, NY"), 50))
 
 
 

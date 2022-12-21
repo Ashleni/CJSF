@@ -79,8 +79,9 @@ def dashboard():
 
         db.add_past_search(session['username'],request.form['location'])
         coords = api.coords(request.form['location'])
-        print(coords)
+        #print(coords)
         restaurants = api.restaurants(coords)
+        #print(restaurants)
         amenities = api.nearest_Amenities(coords, 100)
         users = db.users_who_searched(request.form['location'])
 
@@ -90,7 +91,6 @@ def dashboard():
         users= users, \
         location = request.form['location'], latitude = api.latitude(request.form['location']), longitude = api.longitude(request.form['location']) )
     except Exception as e:
-        traceback.print_exc()
         return "An error has occured. Did you use a blank or incorrect key in keys/key_positionstack.txt or in key_yelp.txt?"
 
 
