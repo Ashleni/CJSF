@@ -40,8 +40,8 @@ class Location {
   }
   calculateXY(centerLat, centerLong) {
 
-  	this.X = this.centerX - 10000 * (centerLong - this.longitude)
-    this.Y = this.centerY + 10000 * (centerLat - this.latitude)
+  	this.X = this.centerX - 20000 * (centerLong - this.longitude)
+    this.Y = this.centerY + 20000 * (centerLat - this.latitude)
   }
  
  redrawOthers() {
@@ -144,7 +144,6 @@ class Location {
 }
 
 function initalize(centerLat, centerLong, otherLocations, amenities) {
-    console.log(otherLocations)
     const center = new Location(centerLat, centerLong, "Your location", centerLat, centerLong, true, false)
     
 
@@ -154,7 +153,7 @@ function initalize(centerLat, centerLong, otherLocations, amenities) {
     const restaurant = Object.keys(otherLocations)
     for (let i = 0; i < restaurant.length; i++) {
         const location = restaurant[i]
-        const coordinates = otherLocations[location]
+        const coordinates = otherLocations[location][0]
 
         const place1 = new Location(coordinates[0], coordinates[1], location, centerLat, centerLong, false, true)
         place1.placeCircle()
