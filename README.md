@@ -10,7 +10,7 @@ A boot-leg Google Maps. Address inputted from user then converted into coordinat
 
 Apis Used:
 <br> [Position Stack](https://github.com/stuy-softdev/notes-and-code/blob/main/api_kb/411_on_PositionStack.md)
-<br> [CityBikes API](https://github.com/stuy-softdev/notes-and-code/blob/main/api_kb/411_on_city_bikes.md)
+<br> [Yelp API](https://github.com/stuy-softdev/notes-and-code/blob/main/api_kb/411_on_Yelp.md)
 <br> [OpenStreetMap Overpass API](https://github.com/stuy-softdev/notes-and-code/blob/main/api_kb/411_on_OpenStreetMap_overpass-api.md)
 
 
