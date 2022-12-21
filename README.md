@@ -18,7 +18,7 @@ Launch Codes:
 * git clone https://github.com/kev1n/CJSF.git
 * cd CJSF
 * python3 -m venv venv
-* venv/bin/activate
+* source venv/bin/activate
 * Run ```pip install -r requirements.txt```
 * Run ```python3 app/__init__.py```  
 * Open "localhost:5000" in your favorite browser
