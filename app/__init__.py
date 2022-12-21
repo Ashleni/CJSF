@@ -86,6 +86,7 @@ def dashboard():
         users = db.users_who_searched(request.form['location'])
         print(amenities)
         #print(amenities)
+        print(users)
         return render_template("dashboard.html", centerLat = coords[0], centerLong = coords[1], restaurants=restaurants, \
         amenities=amenities, past_searches=db.past_searches_for_user(session['username'])[::-1], \
         users= users, \

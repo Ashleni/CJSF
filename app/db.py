@@ -114,7 +114,7 @@ def past_searches_for_user(username): #for printing all users and past searches
 def users_who_searched(search): #for printing all users and past searches 
     db = sqlite3.connect(DB_FILE, check_same_thread=False) 
     c = db.cursor()
-    results = c.execute("SELECT * FROM pastSearches WHERE pastSearch = ?;", (search, )).fetchall()
+    results = c.execute("SELECT DISTINCT username FROM pastSearches WHERE pastSearch = ?;", (search, )).fetchall()
     db.close()
     return results
 #==========================================================
