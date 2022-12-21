@@ -133,6 +133,38 @@ def restaurantsAddress(coords):
             address = str(data["businesses"][x]["location"]["display_address"][0]) + ", " + str(data["businesses"][x]["location"]["display_address"][1])
             place_dict[str(data["businesses"][x]["name"])] = address
     return place_dict
+    
+def restaurantInfo(coords):
+    latitude = str(coords[0])
+    longitude = str(coords[1])
+    key = open("app/keys/key_yelp.txt", "r").read()
+    key = key.strip()
+    url = "https://api.yelp.com/v3/businesses/search?latitude=" + latitude + "&longitude=" + longitude + "&term=restaurant&sort_by=best_match&limit=20"
+    headers = {
+    "accept": "application/json",
+    "Authorization": "Bearer " + key
+    }
+    r = requests.get(url, headers=headers)
+    data  =  r.json()
+    #pprint(data)
+    place_dict = {}
+    pprint(data)
+    for x in range(len(data["businesses"])):
+        if "name" in data["businesses"][x] and data["businesses"][x]["name"] not in place_dict:
+            address = str(data["businesses"][x]["location"]["display_address"][0]) + ", " + str(data["businesses"][x]["location"]["display_address"][1])
+            categories = []
+            for y in range(len(data["businesses"][x]["categories"])):
+                categories += [str(data["businesses"][x]["categories"][y]["title"])]
+            rating = str(data["businesses"][x]["rating"])
+            phone = str(data["businesses"][x]["phone"])
+            img_url = str(data["businesses"][x]["image_url"])
+            distance = str(data["businesses"][x]["distance"])
+            if data["businesses"][x]["is_closed"]:
+                closed_open = "Currently open"
+            else:
+                closed_open = "Currently closed"
+            place_dict[str(data["businesses"][x]["name"])] = [address, categories, rating, phone, img_url, distance, closed_open]
+    return place_dict
 
 
 #test commands!
@@ -140,7 +172,7 @@ def restaurantsAddress(coords):
 #latitude = latitude(" 345 Chambers, NY, NY  ")
 #print(str(latitude) + "," + str(longitude))
 #print(nearest_Amenities(latitude, longitude, 50))
-#print(restaurants(coords("345 Chambers, NY, NY")))
+print(restaurantInfo(coords("345 Chambers, NY, NY")))
 #print(coords("345 Chambers, NY, NY"))
 #print(nearest_Amenities(coords("345 Chambers, NY, NY"), 50))
 
