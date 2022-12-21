@@ -99,19 +99,24 @@ def restaurants(coords):
     data  =  r.json()
     pprint(data)
     place_dict = {}
+
     for x in range(len(data["businesses"])):
         if "name" in data["businesses"][x] and data["businesses"][x]["name"] not in place_dict:
             coords = [str(data["businesses"][x]["coordinates"]["latitude"]), str(data["businesses"][x]["coordinates"]["longitude"])]
-            place_dict[str(data["businesses"][x]["name"])] = coords
+            address = str(data["businesses"][x]["location"]["display_address"][0]) + ", " + str(data["businesses"][x]["location"]["display_address"][1])
+            categories = []
+            for y in range(len(data["businesses"][x]["categories"])):
+                categories += [str(data["businesses"][x]["categories"][y]["title"])]
+            rating = str(data["businesses"][x]["rating"])
+            phone = str(data["businesses"][x]["phone"])
+            img_url = str(data["businesses"][x]["image_url"])
+            distance = str(round(data["businesses"][x]["distance"]))
+            if data["businesses"][x]["is_closed"]:
+                closed_open = "Currently open"
+            else:
+                closed_open = "Currently closed"
+            place_dict[str(data["businesses"][x]["name"])] = [coords, address, categories, rating, phone, img_url, distance, closed_open]
     return place_dict
-
-    ''' #returns list of only restaurant names
-    place_list = []
-    for x in range(len(data["businesses"])):
-        if "name"  in data["businesses"][x] and data["businesses"][x]["name"] not in place_list:
-            place_list.append(str(data["businesses"][x]["name"]))
-    return place_list
-    '''
     
 # returns dictionary of restaurants, key is restaurant name and value is address. ALL STRINGS
 def restaurantsAddress(coords):
@@ -128,6 +133,7 @@ def restaurantsAddress(coords):
     data  =  r.json()
     #pprint(data)
     place_dict = {}
+    
     for x in range(len(data["businesses"])):
         if "name" in data["businesses"][x] and data["businesses"][x]["name"] not in place_dict:
             address = str(data["businesses"][x]["location"]["display_address"][0]) + ", " + str(data["businesses"][x]["location"]["display_address"][1])
@@ -156,7 +162,7 @@ def restaurantInfo(coords):
             for y in range(len(data["businesses"][x]["categories"])):
                 categories += [str(data["businesses"][x]["categories"][y]["title"])]
             rating = str(data["businesses"][x]["rating"])
-            phone = str(data["businesses"][x]["phone"])
+            phone = str(data["businesses"][x]["display_phone"])
             img_url = str(data["businesses"][x]["image_url"])
             distance = str(data["businesses"][x]["distance"])
             if data["businesses"][x]["is_closed"]:

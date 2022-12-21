@@ -18,8 +18,8 @@ class Location {
   constructor(latitude, longitude, placeName, centerLat, centerLong, isCenter, isRestaurant) {
     this.latitude = latitude
     this.longitude = longitude
-    this.centerX = 400
-    this.centerY = 300
+    this.centerX = 300
+    this.centerY = 200
     this.placeName = placeName
     this.circleClicked = false
     this.calculateXY(centerLat, centerLong)
@@ -40,8 +40,8 @@ class Location {
   }
   calculateXY(centerLat, centerLong) {
 
-  	this.X = this.centerX - 25000 * (centerLong - this.longitude)
-    this.Y = this.centerY + 25000 * (centerLat - this.latitude)
+  	this.X = this.centerX - 10000 * (centerLong - this.longitude)
+    this.Y = this.centerY + 10000 * (centerLat - this.latitude)
   }
  
  redrawOthers() {
@@ -113,7 +113,7 @@ class Location {
       }
 
       if (this.circleClicked) {
-        ctx.clearRect(0, 0, 800, 600);
+        ctx.clearRect(0, 0, 600, 400);
         for (let i = 0; i < others.length; i++) {
           others[i].placeCircle()
         }
