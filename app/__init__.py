@@ -70,7 +70,7 @@ def home():
     if "username" not in session:
         return redirect(url_for("login"))
 
-    return render_template("home.html", past_searches=db.past_searches_for_user(session['username'])[::-1])
+    return render_template("home.html", past_searches=db.past_searches_for_user(session['username'])[::-1], user = session['username'])
 
 
 @app.route("/dashboard", methods=['POST'])
