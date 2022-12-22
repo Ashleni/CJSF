@@ -95,6 +95,16 @@ def dashboard():
         print(traceback.format_exc())
         return "An error has occured. Did you use a blank or incorrect key in keys/key_positionstack.txt or in key_yelp.txt?"
 
+@app.route("/admin", methods=['GET', "POST"])
+def admin():
+    
+    if "username" in session:
+        if db.is_admin(session["username"]):
+            return render_template("adminPanel.html")
+        else:
+            return render_template("requestAdmin.html")
+    
+
 
 
 if __name__ == "__main__": #false if this file imported as module
