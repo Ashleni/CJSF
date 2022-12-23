@@ -173,6 +173,16 @@ def restaurantInfo(coords):
     return place_dict
 
 
+def maps(coords):
+    latitude = str(coords[0])
+    longitude = str(coords[1])
+    key = open("app/keys/key_geoapify.txt", "r").read()
+    key = key.strip()
+    #url = "https://api.yelp.com/v3/businesses/search?latitude=" + latitude + "&longitude=" + longitude + "&term=restaurant&sort_by=best_match&limit=20"
+    #url = "https://maps.geoapify.com/v1/staticmap?style=osm-bright-smooth&width=600&height=400&center=lonlat%3A-122.29009844646316%2C47.54607447032754&zoom=14.3497&marker=lonlat%3A-122.29188334609739%2C47.54403990655936%3Btype%3Aawesome%3Bcolor%3A%23bb3f73%3Bsize%3Ax-large%3Bicon%3Apaw%7Clonlat%3A-122.29282631194182%2C47.549609195001494%3Btype%3Amaterial%3Bcolor%3A%234c905a%3Bicon%3Atree%3Bicontype%3Aawesome%7Clonlat%3A-122.28726954893025%2C47.541766557545884%3Btype%3Amaterial%3Bcolor%3A%234c905a%3Bicon%3Atree%3Bicontype%3Aawesome&apiKey=ccbf1f8595484e5f8216653ae249b4b4
+    url = "https://maps.geoapify.com/v1/staticmap?style=osm-bright-smooth&width=600&height=400&center=lonlat:" + longitude + "," + latitude + "&zoom=13.7401&apiKey=" + key
+    return url
+    
 #test commands!
 #longitude = longitude(" 345 Chambers, NY, NY ")
 #latitude = latitude(" 345 Chambers, NY, NY  ")
@@ -180,7 +190,7 @@ def restaurantInfo(coords):
 #print(nearest_Amenities(latitude, longitude, 50))
 #print(restaurantInfo(coords("345 Chambers, NY, NY")))
 #print(coords("345 Chambers, NY, NY"))
-#print(nearest_Amenities(coords("345 Chambers, NY, NY"), 50))
+print(maps(coords("345 Chambers, NY, NY")))
 
 
 

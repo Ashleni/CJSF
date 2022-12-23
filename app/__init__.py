@@ -91,12 +91,12 @@ def dashboard():
         print(restaurants)
         amenities = api.nearest_Amenities(coords, 100)
         users = db.users_who_searched(request.form['location'])
-
+        img = api.maps(coords)
 
         return render_template("dashboard.html", centerLat = coords[0], centerLong = coords[1], restaurants=restaurants, \
         amenities=amenities, past_searches=db.past_searches_for_user(session['username'])[::-1], \
         users= users, \
-        location = request.form['location'], latitude = api.latitude(request.form['location']), longitude = api.longitude(request.form['location']) )
+        location = request.form['location'], latitude = api.latitude(request.form['location']), longitude = api.longitude(request.form['location']), map = img )
     except Exception as e:
         print(traceback.format_exc())
         return "An error has occured. Did you use a blank or incorrect key in keys/key_positionstack.txt or in key_yelp.txt?"
