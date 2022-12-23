@@ -56,11 +56,16 @@ def sample(): #adds sample data
     request_admin("kevin")
     request_admin("faiyaz")
 
-    suggest_new_amenity("tribeca bridge", 40, 40, "kevin")
-    suggest_new_amenity("brooklyn bridge", 40, 40, "faiyaz")
+    suggest_new_amenity("gabagoo", 48, 4, "huhhhh")
+    suggest_new_amenity("Effiel Tower", 48.8583736, 2.2922926, "kevin")
+    suggest_new_amenity("Pier 26", 40.721143, -74.014560, "faiyaz")
 
     create_new_amenity("highway to hell", 40, 40, "kevin")
     create_new_amenity("hell", 50, 50, "faiyaz")
+    
+    #name, stars, imgname, latitude, longitude, proposer
+    #create_new_restaurant("fake", 4, "grid.jpg", 40, 60, "admin")
+    #create_new_restaurant("fake2", 4, "grid.jpg", 40, 60, "admin")
 
 
     suggest_new_restaurant("terries", 0, "terries.jpeg", 40.7175296, -74.0152658, "kevin")

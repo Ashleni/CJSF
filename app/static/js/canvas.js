@@ -143,7 +143,7 @@ class Location {
   }
 }
 
-function initalize(centerLat, centerLong, otherLocations, amenities) {
+function initalize(centerLat, centerLong, otherLocations, amenities, user_restaurants, user_amenities) {
     const center = new Location(centerLat, centerLong, "Your location", centerLat, centerLong, true, false)
     
 
@@ -171,7 +171,32 @@ function initalize(centerLat, centerLong, otherLocations, amenities) {
       place1.placeCircle()
       allCircles.push(place1)
     }
-    
+
+
+    const usrres = Object.keys(user_restaurants)
+    for (let i = 0; i < usrres.length; i++) {
+        const location = usrres[i]
+        const lat = user_restaurants[location][2]
+        const long = user_restaurants[location][3]
+
+        const place1 = new Location(lat, long, location, centerLat, centerLong, false, true)
+        place1.placeCircle()
+        allCircles.push(place1)
+    }
+
+    console.log(user_amenities)
+    const usramen = Object.keys(user_amenities)
+    for (let i = 0; i < usramen.length; i++) {
+        const location = usramen[i]
+        const lat = user_amenities[location][0]
+        const long = user_amenities[location][1]
+
+        console.log(lat, long)
+        const place1 = new Location(lat, long, location, centerLat, centerLong, false, false)
+        place1.placeCircle()
+        allCircles.push(place1)
+    }
+
     center.placeCircle()
     allCircles.push(center)
     center.attach()

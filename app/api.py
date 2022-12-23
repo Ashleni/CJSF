@@ -20,7 +20,7 @@ def coords(location):
         #pprint(link)
         info = r.json()
         if not info['data']:
-            #print("EMPTY LIST")
+            print("EMPTY LIST")
         else:
             latitude = info['data'][0]['latitude']
             longitude = info['data'][0]['longitude']

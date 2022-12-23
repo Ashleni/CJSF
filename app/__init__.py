@@ -74,9 +74,11 @@ def register():
 
 @app.route("/home", methods=['GET'])
 def home():
-    print(db.get_all_requested_admins())
-    print(db.get_all_requested_amenities())
-    print(db.get_all_requested_restaurants())
+    #print(db.get_all_requested_admins())
+    #print(db.get_all_requested_amenities())
+    #print(db.get_all_requested_restaurants())
+    #print(db.get_all_approved_amenities())
+    #print(db.get_all_approved_restaurants())
     if "username" not in session:
         return redirect(url_for("login"))
 
@@ -94,15 +96,44 @@ def dashboard():
         else:
             #print(coords)
             restaurants = api.restaurants(coords)
-            print(restaurants)
+            #print(restaurants)
             amenities = api.nearest_Amenities(coords, 100)
             users = db.users_who_searched(request.form['location'])
             img = api.maps(coords)
 
-            return render_template("dashboard.html", centerLat = coords[0], centerLong = coords[1], restaurants=restaurants, \
-            amenities=amenities, past_searches=db.past_searches_for_user(session['username'])[::-1], \
-            users= users, \
-            location = request.form['location'], latitude = api.latitude(request.form['location']), longitude = api.longitude(request.form['location']), map = img )
+            user_restaurants = db.get_all_approved_restaurants()
+            user_amenities = db.get_all_approved_amenities()
+            #print(user_amenities)
+            user_restaurants_dict = {}
+            restaurants_too_far = 0
+            for i in user_restaurants:
+                name = i[1]
+                dist = round(distance(i[4], i[5], coords[0], coords[1]) * 1000)
+                user_restaurants_dict[name] = [i[2], i[3], i[4], i[5], dist]
+                if dist > 5000:
+                    restaurants_too_far += 1
+
+            user_amenities_dict = {}
+            for i in user_amenities:
+                name = i[1]
+                user_amenities_dict[name] = [i[2], i[3], round(distance(i[2], i[3], coords[0], coords[1]) * 1000)]
+
+            print(user_amenities)
+            return render_template("dashboard.html",
+                centerLat = coords[0],
+                centerLong = coords[1],
+                restaurants=restaurants,
+                amenities=amenities,
+                past_searches=db.past_searches_for_user(session['username'])[::-1],
+                users= users,
+                location = request.form['location'],
+                latitude = api.latitude(request.form['location']),
+                longitude = api.longitude(request.form['location']),
+                map = img,
+                user_restaurants = user_restaurants_dict,
+                user_amenities = user_amenities_dict,
+                restaurants_too_far = restaurants_too_far
+            )
     except Exception as e:
         print(traceback.format_exc())
         return "An error has occured. Did you use a blank or incorrect key in keys/key_positionstack.txt or in key_yelp.txt?"
@@ -130,7 +161,7 @@ def add():
         return redirect(url_for("login"))
 
     isAdmin = db.is_admin(session["username"])
-    return render_template("add.html", isAdmin=isAdmin)
+    return render_template("add.html", isAdmin=isAdmin, amenitysuccess=request.args.get('amenitysuccess'), restaurantsuccess=request.args.get('restaurantsuccess'))
     
 @app.route("/addamenity", methods=['POST'])
 def addamenity():
@@ -140,7 +171,7 @@ def addamenity():
         db.create_new_amenity(request.form["name"], request.form["latitude"], request.form["longitude"], session["username"])
     else:
         db.suggest_new_amenity(request.form["name"], request.form["latitude"], request.form["longitude"], session["username"])
-    return redirect(url_for("add"))
+    return redirect(url_for("add", amenitysuccess = True))
 
 @app.route("/addrestaurant", methods=['POST'])
 def addrestaurant():
@@ -152,7 +183,7 @@ def addrestaurant():
         db.create_new_restaurant(request.form["name"], request.form["rating"], filename, request.form["latitude"], request.form["longitude"], session["username"])
     else:
         db.suggest_new_restaurant(request.form["name"], request.form["rating"], filename, request.form["latitude"], request.form["longitude"], session["username"])
-    return redirect(url_for("add"))
+    return redirect(url_for("add", restaurantsuccess = True))
 
 @app.route("/approve-admins", methods=["POST"])
 def approve_admins():
@@ -177,8 +208,6 @@ def approve_restaurant():
     else: # approve
         db.approve_restaurant(request.form["id"], session["username"])
     return redirect(url_for("admin"))
-
-
 
 
 
@@ -208,7 +237,7 @@ def distance(lat1, lon1, lat2, lon2):
     p = pi/180
     a = 0.5 - cos((lat2-lat1)*p)/2 + cos(lat1*p) * cos(lat2*p) * (1-cos((lon2-lon1)*p))/2
     return 12742 * asin(sqrt(a)) #2*R*asin...
-    
+
 if __name__ == "__main__": #false if this file imported as module
     #enable debugging, auto-restarting of server when this file is modified
     app.debug = True

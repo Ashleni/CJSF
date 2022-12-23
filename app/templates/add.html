@@ -44,7 +44,12 @@
         </div>
     
         <button class="btn btn-primary" type="submit">{{"Submit" if isAdmin else "Submit for approval"}}</button>
+        {% if amenitysuccess %}
+        <p class="text-success">Successfully requested</p>
+        {% endif %}
     </form>
+    
+    
 
     <form class="container border border-primary p-3 mb-3" action="/addrestaurant" method="post" enctype="multipart/form-data">
         <div class="mb-3">
@@ -84,7 +89,11 @@
         </div>
     
         <button type="submit" class="btn btn-primary" type="submit" value="#563d7c">{{"Submit" if isAdmin else "Submit for approval"}}</button>
+        {% if restaurantsuccess %}
+        <p class="text-success">Successfully requested</p>
+        {% endif %}
     </form>
+    
 
 </body>
 </html>
