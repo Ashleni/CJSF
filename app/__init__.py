@@ -73,6 +73,7 @@ def register():
 
 @app.route("/home", methods=['GET'])
 def home():
+    print(db.get_all_requested_admins())
     if "username" not in session:
         return redirect(url_for("login"))
 
@@ -109,8 +110,9 @@ def admin():
         db.request_admin(session["username"])
         return render_template("requestAdmin.html", hasRequested = db.has_requested_admin(session["username"]), success = True)
     else: #get request
-        if db.is_admin(session["username"]):
-            return render_template("adminPanel.html")
+        if db.is_admin(session["username"]): # for admins only
+            requested = db.get_all_requested_admins()
+            return render_template("adminPanel.html", requested = requested)
         else:
             return render_template("requestAdmin.html", hasRequested = db.has_requested_admin(session["username"]))
 
@@ -126,6 +128,13 @@ def add():
         print(db.is_admin(session["username"]))
         return render_template("add.html", isAdmin=db.is_admin(session["username"]))
     
+@app.route("/approve-admins", methods=["POST"])
+def approveadmins():
+    if request.form["approval"] == "reject":
+        db.reject_admin(request.form["username"])
+    else: # approve
+        db.approve_admin(request.form["username"])
+    return redirect(url_for("admin"))
 
 def allowed_file(filename):
     return '.' in filename and \

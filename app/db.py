@@ -47,6 +47,8 @@ def sample(): #adds sample data
     register_user("admin", "adminadmin")
 
     make_admin("admin")
+    request_admin("kevin")
+    request_admin("faiyaz")
 
     past_searches = [
         ("faiyaz", "345 Chambers St"),
@@ -90,18 +92,40 @@ def request_admin(username):
     else:
         return False
 
+#==========================================================
 def reject_admin(username):
-    if not has_rejected_admin():
+    if not has_rejected_admin(username):
         db = sqlite3.connect(DB_FILE, check_same_thread=False)
         c = db.cursor()
 
-        c.execute("REPLACE INTO admin VALUES(?, ?, ?, ?)", (username, 0, 1, 1))
+        c.execute("REPLACE INTO admin VALUES(?, ?, ?, ?)", (username, 0, 0, 1))
         db.commit() #save changes
         db.close()
         return True
     else:
         return False
 
+#==========================================================
+def approve_admin(username):
+    if not has_rejected_admin(username):
+        db = sqlite3.connect(DB_FILE, check_same_thread=False)
+        c = db.cursor()
+
+        c.execute("REPLACE INTO admin VALUES(?, ?, ?, ?)", (username, 1, 0, 0))
+        db.commit() #save changes
+        db.close()
+        return True
+    else:
+        return False
+
+#==========================================================
+def get_all_requested_admins():
+    db = sqlite3.connect(DB_FILE, check_same_thread=False)
+    c = db.cursor()
+    results = c.execute("SELECT username FROM admin WHERE isRejected = 0 AND isRequested = 1").fetchall() #needs to be in ' ', ? notation doesnt help with this 
+    db.close()
+
+    return results
 #==========================================================
 def has_requested_admin(username):
     db = sqlite3.connect(DB_FILE, check_same_thread=False)
