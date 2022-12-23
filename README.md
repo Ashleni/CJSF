@@ -6,7 +6,7 @@ Project Manager : Kevin Wang
 Devos : Shreya Roy & Faiyaz Rafee & Justin Mohabir
 --
 Project Description:  
-A boot-leg Google Maps. Address inputted from user then converted into coordinates for city bike and overpass API. Returns nearest bikes and transit within 5 miles.
+Create boot-leg Google Maps. An address inputted from the client is then converted into coordinates to be passed into the yelp restaurants API and overpass API. Returns nearest restaurants and amenities within 5000 meters of the client’s inputted address. Also allows users to update the maps with their own amenities and restaurants, and an admin portal to approve it!
 
 Apis Used:
 <br> [Position Stack](https://github.com/stuy-softdev/notes-and-code/blob/main/api_kb/411_on_PositionStack.md)
