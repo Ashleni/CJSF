@@ -9,51 +9,7 @@
   </head>
   <body onload="initalize({{centerLat}}, {{centerLong}}, {{restaurants}}, {{amenities}})">
 
-    <nav class="navbar navbar-expand-lg bg-light">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="/">Crazy Joe Speaks Frogs</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll"
-          aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarScroll">
-          <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
-            <li class="nav-item">
-              <a class="nav-link" href="/home">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link disabled" href="/home">Dashboard</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/logout">Logout</a>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                History
-              </a>
-              <ul class="dropdown-menu">
-                {% for i in past_searches %}
-                <li>
-                  <form action="/dashboard" method="post">
-                    <input class="form-control" style="display:none" id="location" name="location" value="{{i[1]}}">
-                    <div class="text-center" type="submit">{{i[1]}}</div>
-                  </form>
-                </li>
-                {% endfor %}
-
-
-              </ul>
-            </li>
-
-          </ul>
-          <form class="d-flex" role="search" action="/dashboard" method="post">
-            <input class="form-control me-2" type="search" placeholder="Search" name="location" aria-label="Search">
-            <button class="btn btn-outline-success" type="submit">Search</button>
-
-          </form>
-        </div>
-      </div>
-    </nav>
+    {% include 'navbar.html' %}
 
 
 

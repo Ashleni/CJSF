@@ -5,16 +5,21 @@
 from flask import Flask             #facilitate flask webserving
 from flask import render_template   #facilitate jinja templating
 from flask import request           #facilitate form submission
-from flask import session, redirect, url_for
+from flask import session, redirect, url_for, flash
 import os                           #facilitate key generation
 import db
 import api
 import traceback
+from werkzeug.utils import secure_filename
 #the conventional way:
 #from flask import Flask, render_template, request
 
-app = Flask(__name__)    #create Flask object
-# Set the secret key to some random bytes. Keep this really secret!
+UPLOAD_FOLDER = 'app/static/imgs'
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
+
+app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
 app.secret_key = "abcdef"
 #app.secret_key = os.urandom(32)
 
@@ -97,15 +102,49 @@ def dashboard():
 
 @app.route("/admin", methods=['GET', "POST"])
 def admin():
-    
-    if "username" in session:
+    if "username" not in session:
+        return redirect(url_for("login"))
+
+    if request.method == "POST":
+        db.request_admin(session["username"])
+        return render_template("requestAdmin.html", hasRequested = db.has_requested_admin(session["username"]), success = True)
+    else: #get request
         if db.is_admin(session["username"]):
             return render_template("adminPanel.html")
         else:
-            return render_template("requestAdmin.html")
+            return render_template("requestAdmin.html", hasRequested = db.has_requested_admin(session["username"]))
+
+@app.route("/add", methods=['GET', "POST"])
+def add():
+    if "username" not in session:
+        return redirect(url_for("login"))
+
+    if request.method == "POST":
+        upload_file()
+        return "Successfully uploaded"
+    else: #get request
+        print(db.is_admin(session["username"]))
+        return render_template("add.html", isAdmin=db.is_admin(session["username"]))
     
 
+def allowed_file(filename):
+    return '.' in filename and \
+        filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+def upload_file():
+    # check if the post request has the file part
+    if 'file' not in request.files:
+        flash('No file part')
+        return redirect(request.url)
+    file = request.files['file']
+    # if user does not select file, browser also
+    # submit a empty part without filename
+    if file.filename == '':
+        flash('No selected file')
+        return redirect(request.url)
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
 if __name__ == "__main__": #false if this file imported as module
     #enable debugging, auto-restarting of server when this file is modified

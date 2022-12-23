@@ -13,11 +13,11 @@ def wipeDB():
     c = db.cursor()               #facilitate db ops -- you will use cursor to trigger db events
     c.execute("DROP TABLE if exists authentication") #drop so no need to delete database each time the code changes
     c.execute("DROP TABLE if exists pastSearches")
-    c.execute("DROP TABLE if exists isAdmin")
+    c.execute("DROP TABLE if exists admin")
     c.executescript(""" 
         CREATE TABLE authentication (username TEXT PRIMARY KEY, password TEXT NOT NULL);
         CREATE TABLE pastSearches (username TEXT NOT NULL, pastSearch TEXT NOT NULL);
-        CREATE TABLE isAdmin (username TEXT PRIMARY KEY, admin INTEGER NOT NULL);
+        CREATE TABLE admin (username TEXT PRIMARY KEY, isAdmin INTEGER NOT NULL, isRequested INTEGER NOT NULL);
     """
     ) #Primary key is implicityly NOT NULL
     db.commit() #save changes
@@ -30,7 +30,7 @@ def start():
     c.executescript(""" 
         CREATE TABLE IF NOT EXISTS authentication (username TEXT PRIMARY KEY, password TEXT NOT NULL);
         CREATE TABLE IF NOT EXISTS pastSearches (username TEXT NOT NULL, pastSearch TEXT NOT NULL);
-        CREATE TABLE IF NOT EXISTS isAdmin (username TEXT PRIMARY KEY, admin INTEGER NOT NULL, isRequested INTEGER NOT NULL);
+        CREATE TABLE IF NOT EXISTS admin (username TEXT PRIMARY KEY, isAdmin INTEGER NOT NULL, isRequested INTEGER NOT NULL);
     """
     )
     if len(c.execute("SELECT * FROM authentication").fetchall()) == 0:
@@ -62,7 +62,7 @@ def make_admin(username):
     db = sqlite3.connect(DB_FILE, check_same_thread=False)
     c = db.cursor()
 
-    c.execute("REPLACE INTO isAdmin VALUES(?, ?)", (username, 1))
+    c.execute("REPLACE INTO admin VALUES(?, ?, ?)", (username, 1, 0))
     db.commit() #save changes
     db.close()
     return True
@@ -72,16 +72,41 @@ def make_regular_user(username):
     db = sqlite3.connect(DB_FILE, check_same_thread=False)
     c = db.cursor()
 
-    c.execute("INSERT INTO isAdmin VALUES(?, ?)", (username, 0))
+    c.execute("INSERT INTO admin VALUES(?, ?, ?)", (username, 0, 0))
     db.commit() #save changes
     db.close()
     return True
 
 #==========================================================
+def request_admin(username):
+    db = sqlite3.connect(DB_FILE, check_same_thread=False)
+    c = db.cursor()
+
+    c.execute("REPLACE INTO admin VALUES(?, ?, ?)", (username, 0, 1))
+    db.commit() #save changes
+    db.close()
+    return True
+
+#==========================================================
+def has_requested_admin(username):
+    db = sqlite3.connect(DB_FILE, check_same_thread=False)
+    c = db.cursor()
+    results = c.execute("SELECT isRequested FROM admin WHERE username = ?", (username,)).fetchall() #needs to be in ' ', ? notation doesnt help with this 
+    db.close()
+
+    if len(results) > 0:
+        if results[0][0] == 1:
+            return True
+        else:
+            return False
+    else: 
+        return False
+
+#==========================================================
 def is_admin(username): #determines if user is admin
     db = sqlite3.connect(DB_FILE, check_same_thread=False)
     c = db.cursor()
-    results = c.execute("SELECT admin FROM isAdmin WHERE username = ?", (username,)).fetchall() #needs to be in ' ', ? notation doesnt help with this 
+    results = c.execute("SELECT isAdmin FROM admin WHERE username = ?", (username,)).fetchall() #needs to be in ' ', ? notation doesnt help with this 
     db.close()
 
     if len(results) > 0:
