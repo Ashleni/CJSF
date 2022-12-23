@@ -5,19 +5,28 @@ from pprint import pprint
 
 app = Flask(__name__)    #create Flask object
 
+
+#==========================================================
 #position stack!
 
 # returns list, latitude first, longitude second, both ints
 def coords(location):
-    key = open("app/keys/key_positionstack.txt", "r").read()
-    key = key.strip()
-    query = location
-    link = 'http://api.positionstack.com/v1/forward?access_key=' + key + '&query=' + query
-    r = requests.get(link) 
-    info = r.json()
-    latitude = info['data'][0]['latitude']
-    longitude = info['data'][0]['longitude']
-    return [latitude, longitude]
+    try:
+        key = open("app/keys/key_positionstack.txt", "r").read()
+        key = key.strip()
+        query = location
+        link = 'http://api.positionstack.com/v1/forward?access_key=' + key + '&query=' + query
+        r = requests.get(link) 
+        #pprint(link)
+        info = r.json()
+        if not info['data']:
+            #print("EMPTY LIST")
+        else:
+            latitude = info['data'][0]['latitude']
+            longitude = info['data'][0]['longitude']
+        return [latitude, longitude]
+    except Exception as e:
+        return "invalid"
 
 # returns latitude as int of location
 # location should be string with any amt of info needed
@@ -46,7 +55,9 @@ def longitude(location):
     info = r.json()
     return info['data'][0]['longitude']
     
-    
+
+#==========================================================
+# overpass api!
 # returns dictionary of nearest amenities, key is amenity name and value is coord list (latitude, longitude). ALL STRINGS
 def nearest_Amenities(coords, magnitude):
     longitude = str(coords[1])
@@ -69,19 +80,8 @@ def nearest_Amenities(coords, magnitude):
             place_dict[str(data["elements"][x]["tags"]["name"])] = coords
     return place_dict
 
-'''
-#open street map
-def near(coords, magnitude):
-    longitude = str(coords[1])
-    latitude = str(coords[0])
-    url = "https://www.openstreetmap.org/#map=" + str(magnitude) + "/" + latitude + "/" + longitude
-    r = requests.get(url)
-    print(url)
-    data = r.json()
-    pprint(data)
-'''
 
-
+#==========================================================
 #yelp!
 
 # returns dictionary of restaurants, key is restaurant name and value is coord list (latitude, longitude). ALL STRINGS
@@ -97,13 +97,15 @@ def restaurants(coords):
     }
     r = requests.get(url, headers=headers)
     data  =  r.json()
-    pprint(data)
+    #pprint(data)
     place_dict = {}
 
     for x in range(len(data["businesses"])):
         if "name" in data["businesses"][x] and data["businesses"][x]["name"] not in place_dict:
             coords = [str(data["businesses"][x]["coordinates"]["latitude"]), str(data["businesses"][x]["coordinates"]["longitude"])]
-            address = str(data["businesses"][x]["location"]["display_address"][0]) + ", " + str(data["businesses"][x]["location"]["display_address"][1])
+            address = ""
+            for y in range(len(data["businesses"][x]["location"]["display_address"])):
+                address += str(data["businesses"][x]["location"]["display_address"][y]) + " " 
             categories = []
             for y in range(len(data["businesses"][x]["categories"])):
                 categories += [str(data["businesses"][x]["categories"][y]["title"])]
@@ -154,10 +156,11 @@ def restaurantInfo(coords):
     data  =  r.json()
     #pprint(data)
     place_dict = {}
-    #pprint(data)
     for x in range(len(data["businesses"])):
         if "name" in data["businesses"][x] and data["businesses"][x]["name"] not in place_dict:
-            address = str(data["businesses"][x]["location"]["display_address"][0]) + ", " + str(data["businesses"][x]["location"]["display_address"][1])
+            address = ""
+            for y in range(len(data["businesses"][x]["location"]["display_address"])):
+                address += str(data["businesses"][x]["location"]["display_address"][y]) + " " 
             categories = []
             for y in range(len(data["businesses"][x]["categories"])):
                 categories += [str(data["businesses"][x]["categories"][y]["title"])]
@@ -173,6 +176,9 @@ def restaurantInfo(coords):
     return place_dict
 
 
+#==========================================================
+# geoapify!
+# returns link to a generated image of a map.
 def maps(coords):
     latitude = str(coords[0])
     longitude = str(coords[1])
@@ -183,45 +189,18 @@ def maps(coords):
     url = "https://maps.geoapify.com/v1/staticmap?style=osm-bright-smooth&width=600&height=400&center=lonlat:" + longitude + "," + latitude + "&zoom=13.7401&apiKey=" + key
     return url
     
+    
+    
+#==========================================================    
+
 #test commands!
 #longitude = longitude(" 345 Chambers, NY, NY ")
 #latitude = latitude(" 345 Chambers, NY, NY  ")
 #print(str(latitude) + "," + str(longitude))
 #print(nearest_Amenities(latitude, longitude, 50))
-#print(restaurantInfo(coords("345 Chambers, NY, NY")))
-#print(coords("345 Chambers, NY, NY"))
-print(maps(coords("345 Chambers, NY, NY")))
+#print(restaurantInfo(coords("345 chambers")))
+#print(coords("ajsgdfsuihdsfuirehdsifu esguiesi dfugh df"))
+#print(maps(coords("345 chambers")))
 
 
 
-#open street map!
-
-'''
-#brokcen :'(
-def nameAndOperator(coords):
-    latitude = str(coords[0])
-    longitude = str(coords[1])
-    link = "https://overpass-api.de/api/interpreter?[out:json];way(around:50," + latitude + "," + longitude + ");out;"
-    #print(link)
-    link2 = 'https://overpass-api.de/api/interpreter'
-    query = """
-    [out:json];
-    way(around:50,40.755884,-73.978504);
-    out;
-    """
-    #info = r.json()
-    r = requests.get(link2, params={'data': query})
-    print(r.url)
-    return r.json()
-''' 
-
-'''
-#city bikes!
-# not being used anymore :'(
-def nearest_bikes(longitude, latitude):
-    link = "https://api.citybik.es/v2/networks"
-    r = requests.get(link)
-    info = r.json()
-    for row in info['networks']:
-        print(row['location']['city'] +": " + row['name'])
-'''

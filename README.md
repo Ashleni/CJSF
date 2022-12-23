@@ -12,7 +12,7 @@ Apis Used:
 <br> [Position Stack](https://github.com/stuy-softdev/notes-and-code/blob/main/api_kb/411_on_PositionStack.md)
 <br> [Yelp API](https://github.com/stuy-softdev/notes-and-code/blob/main/api_kb/411_on_Yelp.md)
 <br> [OpenStreetMap Overpass API](https://github.com/stuy-softdev/notes-and-code/blob/main/api_kb/411_on_OpenStreetMap_overpass-api.md)
-
+<br> [Geoapify Static Maps API](https://github.com/stuy-softdev/notes-and-code/blob/main/api_kb/411_on_geoapify_static_maps.md)
 
 Launch Codes:   
 * git clone https://github.com/kev1n/CJSF.git

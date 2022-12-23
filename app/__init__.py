@@ -89,17 +89,20 @@ def dashboard():
 
         db.add_past_search(session['username'],request.form['location'])
         coords = api.coords(request.form['location'])
-        #print(coords)
-        restaurants = api.restaurants(coords)
-        print(restaurants)
-        amenities = api.nearest_Amenities(coords, 100)
-        users = db.users_who_searched(request.form['location'])
-        img = api.maps(coords)
+        if coords == "invalid":
+            return render_template("home.html", error = "Invalid input, no results found.", past_searches=db.past_searches_for_user(session['username'])[::-1], user = session['username'])
+        else:
+            #print(coords)
+            restaurants = api.restaurants(coords)
+            print(restaurants)
+            amenities = api.nearest_Amenities(coords, 100)
+            users = db.users_who_searched(request.form['location'])
+            img = api.maps(coords)
 
-        return render_template("dashboard.html", centerLat = coords[0], centerLong = coords[1], restaurants=restaurants, \
-        amenities=amenities, past_searches=db.past_searches_for_user(session['username'])[::-1], \
-        users= users, \
-        location = request.form['location'], latitude = api.latitude(request.form['location']), longitude = api.longitude(request.form['location']), map = img )
+            return render_template("dashboard.html", centerLat = coords[0], centerLong = coords[1], restaurants=restaurants, \
+            amenities=amenities, past_searches=db.past_searches_for_user(session['username'])[::-1], \
+            users= users, \
+            location = request.form['location'], latitude = api.latitude(request.form['location']), longitude = api.longitude(request.form['location']), map = img )
     except Exception as e:
         print(traceback.format_exc())
         return "An error has occured. Did you use a blank or incorrect key in keys/key_positionstack.txt or in key_yelp.txt?"
