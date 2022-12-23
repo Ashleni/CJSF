@@ -15,10 +15,10 @@ def coords(location):
         query = location
         link = 'http://api.positionstack.com/v1/forward?access_key=' + key + '&query=' + query
         r = requests.get(link) 
-        pprint(link)
+        #pprint(link)
         info = r.json()
         if not info['data']:
-            print("EMPTY LIST")
+            #print("EMPTY LIST")
         else:
             latitude = info['data'][0]['latitude']
             longitude = info['data'][0]['longitude']
