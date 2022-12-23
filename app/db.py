@@ -17,7 +17,7 @@ def wipeDB():
     c.executescript(""" 
         CREATE TABLE authentication (username TEXT PRIMARY KEY, password TEXT NOT NULL);
         CREATE TABLE pastSearches (username TEXT NOT NULL, pastSearch TEXT NOT NULL);
-        CREATE TABLE admin (username TEXT PRIMARY KEY, isAdmin INTEGER NOT NULL, isRequested INTEGER NOT NULL);
+        CREATE TABLE admin (username TEXT PRIMARY KEY, isAdmin INTEGER NOT NULL, isRequested INTEGER NOT NULL, isRejected INTEGER NOT NULL);
     """
     ) #Primary key is implicityly NOT NULL
     db.commit() #save changes
@@ -30,7 +30,7 @@ def start():
     c.executescript(""" 
         CREATE TABLE IF NOT EXISTS authentication (username TEXT PRIMARY KEY, password TEXT NOT NULL);
         CREATE TABLE IF NOT EXISTS pastSearches (username TEXT NOT NULL, pastSearch TEXT NOT NULL);
-        CREATE TABLE IF NOT EXISTS admin (username TEXT PRIMARY KEY, isAdmin INTEGER NOT NULL, isRequested INTEGER NOT NULL);
+        CREATE TABLE IF NOT EXISTS admin (username TEXT PRIMARY KEY, isAdmin INTEGER NOT NULL, isRequested INTEGER NOT NULL, isRejected INTEGER NOT NULL);
     """
     )
     if len(c.execute("SELECT * FROM authentication").fetchall()) == 0:
@@ -62,7 +62,7 @@ def make_admin(username):
     db = sqlite3.connect(DB_FILE, check_same_thread=False)
     c = db.cursor()
 
-    c.execute("REPLACE INTO admin VALUES(?, ?, ?)", (username, 1, 0))
+    c.execute("REPLACE INTO admin VALUES(?, ?, ?, ?)", (username, 1, 0, 0))
     db.commit() #save changes
     db.close()
     return True
@@ -72,26 +72,55 @@ def make_regular_user(username):
     db = sqlite3.connect(DB_FILE, check_same_thread=False)
     c = db.cursor()
 
-    c.execute("INSERT INTO admin VALUES(?, ?, ?)", (username, 0, 0))
+    c.execute("INSERT INTO admin VALUES(?, ?, ?, ?)", (username, 0, 0, 0))
     db.commit() #save changes
     db.close()
     return True
 
 #==========================================================
 def request_admin(username):
-    db = sqlite3.connect(DB_FILE, check_same_thread=False)
-    c = db.cursor()
+    if not has_rejected_admin(username):
+        db = sqlite3.connect(DB_FILE, check_same_thread=False)
+        c = db.cursor()
 
-    c.execute("REPLACE INTO admin VALUES(?, ?, ?)", (username, 0, 1))
-    db.commit() #save changes
-    db.close()
-    return True
+        c.execute("REPLACE INTO admin VALUES(?, ?, ?, ?)", (username, 0, 1, 0))
+        db.commit() #save changes
+        db.close()
+        return True
+    else:
+        return False
+
+def reject_admin(username):
+    if not has_rejected_admin():
+        db = sqlite3.connect(DB_FILE, check_same_thread=False)
+        c = db.cursor()
+
+        c.execute("REPLACE INTO admin VALUES(?, ?, ?, ?)", (username, 0, 1, 1))
+        db.commit() #save changes
+        db.close()
+        return True
+    else:
+        return False
 
 #==========================================================
 def has_requested_admin(username):
     db = sqlite3.connect(DB_FILE, check_same_thread=False)
     c = db.cursor()
     results = c.execute("SELECT isRequested FROM admin WHERE username = ?", (username,)).fetchall() #needs to be in ' ', ? notation doesnt help with this 
+    db.close()
+
+    if len(results) > 0:
+        if results[0][0] == 1:
+            return True
+        else:
+            return False
+    else: 
+        return False
+#==========================================================
+def has_rejected_admin(username):
+    db = sqlite3.connect(DB_FILE, check_same_thread=False)
+    c = db.cursor()
+    results = c.execute("SELECT isRejected FROM admin WHERE username = ?", (username,)).fetchall() #needs to be in ' ', ? notation doesnt help with this 
     db.close()
 
     if len(results) > 0:
