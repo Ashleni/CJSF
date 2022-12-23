@@ -20,19 +20,28 @@
 
   <div class="contain">
     <div>
-        {% if hasRequested %}
+        {% if banned %}
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">{{"Successfully submitted" if success else "Pending Application"}}</h5>
-            <p class="card-text">You have a pending request admin application. Wait for an admin to deny or accept your application.</p>
-            <a href="/home" class="btn btn-primary">Home</a>
+            <h5 class="card-title">BANNED</h5>
+            <p class="card-text">You have been banned from being an admin. Wump wump wump.</p>
+            <a href="/home" class="btn btn-danger">Home</a>
           </div>
-          {% else %}
-        </div>
-        <form class="d-flex" action="/admin" method="post">
-          <button type="submit" class="btn btn-primary btn-lg btn-block">Request Admin Privileges</button>
-  
-      </form>
+        {% else %}
+          {% if hasRequested %}
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">{{"Successfully submitted" if success else "Pending Application"}}</h5>
+              <p class="card-text">You have a pending request admin application. Wait for an admin to deny or accept your application.</p>
+              <a href="/home" class="btn btn-primary">Home</a>
+            </div>
+            {% else %}
+          </div>
+          <form class="d-flex" action="/admin" method="post">
+            <button type="submit" class="btn btn-primary btn-lg btn-block">Request Admin Privileges</button>
+    
+        </form>
+          {% endif %}
         {% endif %}
     </div>
   </div>

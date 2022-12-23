@@ -14,10 +14,14 @@ def wipeDB():
     c.execute("DROP TABLE if exists authentication") #drop so no need to delete database each time the code changes
     c.execute("DROP TABLE if exists pastSearches")
     c.execute("DROP TABLE if exists admin")
+    c.execute("DROP TABLE if exists amenities")
+    c.execute("DROP TABLE if exists restaurants")
     c.executescript(""" 
         CREATE TABLE authentication (username TEXT PRIMARY KEY, password TEXT NOT NULL);
         CREATE TABLE pastSearches (username TEXT NOT NULL, pastSearch TEXT NOT NULL);
         CREATE TABLE admin (username TEXT PRIMARY KEY, isAdmin INTEGER NOT NULL, isRequested INTEGER NOT NULL, isRejected INTEGER NOT NULL);
+        CREATE TABLE amenities (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, latitude INTEGER NOT NULL, longitude INTEGER NOT NULL, proposer TEXT NOT NULL, approvedby TEXT NOT NULL);
+        CREATE TABLE restaurants (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, stars INTEGER NOT NULL, imgname TEXT NOT NULL, latitude INTEGER NOT NULL, longitude INTEGER NOT NULL, proposer TEXT NOT NULL, approvedby TEXT NOT NULL);
     """
     ) #Primary key is implicityly NOT NULL
     db.commit() #save changes
@@ -31,6 +35,8 @@ def start():
         CREATE TABLE IF NOT EXISTS authentication (username TEXT PRIMARY KEY, password TEXT NOT NULL);
         CREATE TABLE IF NOT EXISTS pastSearches (username TEXT NOT NULL, pastSearch TEXT NOT NULL);
         CREATE TABLE IF NOT EXISTS admin (username TEXT PRIMARY KEY, isAdmin INTEGER NOT NULL, isRequested INTEGER NOT NULL, isRejected INTEGER NOT NULL);
+        CREATE TABLE IF NOT EXISTS amenities (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, latitude INTEGER NOT NULL, longitude INTEGER NOT NULL, proposer TEXT NOT NULL, approvedby TEXT NOT NULL);
+        CREATE TABLE IF NOT EXISTS restaurants (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, stars INTEGER NOT NULL, imgname TEXT NOT NULL, latitude INTEGER NOT NULL, longitude INTEGER NOT NULL, proposer TEXT NOT NULL, approvedby TEXT NOT NULL);
     """
     )
     if len(c.execute("SELECT * FROM authentication").fetchall()) == 0:
@@ -50,6 +56,16 @@ def sample(): #adds sample data
     request_admin("kevin")
     request_admin("faiyaz")
 
+    suggest_new_amenity("tribeca bridge", 40, 40, "kevin")
+    suggest_new_amenity("brooklyn bridge", 40, 40, "faiyaz")
+
+    create_new_amenity("highway to hell", 40, 40, "kevin")
+    create_new_amenity("hell", 50, 50, "faiyaz")
+
+
+    suggest_new_restaurant("terries", 0, "terries.jpeg", 40.7175296, -74.0152658, "kevin")
+    suggest_new_restaurant("ferries", 5, "terriesfake.jpeg", 40.7172385, -74.0145222, "faiyaz")
+
     past_searches = [
         ("faiyaz", "345 Chambers St"),
         ("kevin", "29 Fort Greene Pl")
@@ -58,6 +74,88 @@ def sample(): #adds sample data
     db.commit() #save changes
     db.close()
     return True
+
+
+#==========================================================
+def create_new_amenity(name, latitude, longitude, proposer):
+    db = sqlite3.connect(DB_FILE, check_same_thread=False)
+    c = db.cursor()
+
+    c.execute("INSERT INTO amenities(name, latitude, longitude, proposer, approvedby) VALUES(?, ?, ?, ?, ?)", (name, latitude, longitude, proposer, proposer))
+    db.commit() #save changes
+    db.close()
+    return True
+
+#==========================================================
+def suggest_new_amenity(name, latitude, longitude, proposer):
+    db = sqlite3.connect(DB_FILE, check_same_thread=False)
+    c = db.cursor()
+
+    c.execute("INSERT INTO amenities(name, latitude, longitude, proposer, approvedby) VALUES(?, ?, ?, ?, ?)", (name, latitude, longitude, proposer, ""))
+    db.commit() #save changes
+    db.close()
+    return True
+
+#==========================================================
+def create_new_restaurant(name, stars, imgname, latitude, longitude, proposer):
+    db = sqlite3.connect(DB_FILE, check_same_thread=False)
+    c = db.cursor()
+
+    c.execute("INSERT INTO restaurants(name, stars, imgname, latitude, longitude, proposer, approvedby) VALUES(?, ?, ?, ?, ?, ?, ?)", (name, stars, imgname, latitude, longitude, proposer, proposer))
+    db.commit() #save changes
+    db.close()
+    return True
+
+#==========================================================
+def suggest_new_restaurant(name, stars, imgname, latitude, longitude, proposer):
+    db = sqlite3.connect(DB_FILE, check_same_thread=False)
+    c = db.cursor()
+
+    c.execute("INSERT INTO restaurants(name, stars, imgname, latitude, longitude, proposer, approvedby) VALUES(?, ?, ?, ?, ?, ?, ?)", (name, stars, imgname, latitude, longitude, proposer, ""))
+    db.commit() #save changes
+    db.close()
+    return True
+
+#==========================================================
+def approve_amenity(id, approver):
+    db = sqlite3.connect(DB_FILE, check_same_thread=False)
+    c = db.cursor()
+
+    c.execute("UPDATE amenities SET approvedby = ? WHERE id = ?", (approver, id))
+    db.commit() #save changes
+    db.close()
+    return True
+
+#==========================================================
+def reject_amenity(id):
+    db = sqlite3.connect(DB_FILE, check_same_thread=False)
+    c = db.cursor()
+
+    c.execute("DELETE FROM amenities WHERE id = ?", (id,))
+    db.commit() #save changes
+    db.close()
+    return True
+
+#==========================================================
+def approve_restaurant(id, approver):
+    db = sqlite3.connect(DB_FILE, check_same_thread=False)
+    c = db.cursor()
+
+    c.execute("UPDATE restaurants SET approvedby = ? WHERE id = ?", (approver, id))
+    db.commit() #save changes
+    db.close()
+    return True
+
+#==========================================================
+def reject_restaurant(id):
+    db = sqlite3.connect(DB_FILE, check_same_thread=False)
+    c = db.cursor()
+
+    c.execute("DELETE FROM restaurants WHERE id = ?", (id,))
+    db.commit() #save changes
+    db.close()
+    return True
+
 
 #==========================================================
 def make_admin(username):
@@ -126,6 +224,43 @@ def get_all_requested_admins():
     db.close()
 
     return results
+
+#==========================================================
+def get_all_requested_amenities():
+    db = sqlite3.connect(DB_FILE, check_same_thread=False)
+    c = db.cursor()
+    results = c.execute("SELECT * FROM amenities WHERE approvedby == ''").fetchall() #needs to be in ' ', ? notation doesnt help with this 
+    db.close()
+
+    return results
+
+#==========================================================
+def get_all_requested_restaurants():
+    db = sqlite3.connect(DB_FILE, check_same_thread=False)
+    c = db.cursor()
+    results = c.execute("SELECT * FROM restaurants WHERE approvedby == ''").fetchall() #needs to be in ' ', ? notation doesnt help with this 
+    db.close()
+
+    return results
+
+#==========================================================
+def get_all_approved_amenities():
+    db = sqlite3.connect(DB_FILE, check_same_thread=False)
+    c = db.cursor()
+    results = c.execute("SELECT * FROM amenities WHERE approvedby != ''").fetchall() #needs to be in ' ', ? notation doesnt help with this 
+    db.close()
+
+    return results
+
+#==========================================================
+def get_all_approved_restaurants():
+    db = sqlite3.connect(DB_FILE, check_same_thread=False)
+    c = db.cursor()
+    results = c.execute("SELECT * FROM restaurants WHERE approvedby != ''").fetchall() #needs to be in ' ', ? notation doesnt help with this 
+    db.close()
+
+    return results
+
 #==========================================================
 def has_requested_admin(username):
     db = sqlite3.connect(DB_FILE, check_same_thread=False)

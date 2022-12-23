@@ -130,6 +130,3 @@ ehthumbs.db
 /app/keys/key_positionstack.txt
 /app/keys/key_yelp.txt
 /app/keys/key_geoapify.txt
-/app/static/imgs/*.png
-/app/static/imgs/*.jpeg
-/app/static/imgs/*.jpg

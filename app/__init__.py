@@ -11,6 +11,7 @@ import db
 import api
 import traceback
 from werkzeug.utils import secure_filename
+from math import cos, asin, sqrt, pi
 #the conventional way:
 #from flask import Flask, render_template, request
 
@@ -74,6 +75,8 @@ def register():
 @app.route("/home", methods=['GET'])
 def home():
     print(db.get_all_requested_admins())
+    print(db.get_all_requested_amenities())
+    print(db.get_all_requested_restaurants())
     if "username" not in session:
         return redirect(url_for("login"))
 
@@ -111,30 +114,71 @@ def admin():
         return render_template("requestAdmin.html", hasRequested = db.has_requested_admin(session["username"]), success = True)
     else: #get request
         if db.is_admin(session["username"]): # for admins only
-            requested = db.get_all_requested_admins()
-            return render_template("adminPanel.html", requested = requested)
+            requested_admins = db.get_all_requested_admins()
+            requested_amenities = db.get_all_requested_amenities()
+            requested_restaurants = db.get_all_requested_restaurants()
+            return render_template("adminPanel.html", requested_admins = requested_admins, requested_amenities = requested_amenities, requested_restaurants = requested_restaurants)
         else:
-            return render_template("requestAdmin.html", hasRequested = db.has_requested_admin(session["username"]))
+            return render_template("requestAdmin.html", hasRequested = db.has_requested_admin(session["username"]), banned = db.has_rejected_admin(session["username"]))
 
-@app.route("/add", methods=['GET', "POST"])
+@app.route("/add", methods=['GET'])
 def add():
     if "username" not in session:
         return redirect(url_for("login"))
 
-    if request.method == "POST":
-        upload_file()
-        return "Successfully uploaded"
-    else: #get request
-        print(db.is_admin(session["username"]))
-        return render_template("add.html", isAdmin=db.is_admin(session["username"]))
+    isAdmin = db.is_admin(session["username"])
+    return render_template("add.html", isAdmin=isAdmin)
     
+@app.route("/addamenity", methods=['POST'])
+def addamenity():
+
+    isAdmin = db.is_admin(session["username"])
+    if isAdmin:
+        db.create_new_amenity(request.form["name"], request.form["latitude"], request.form["longitude"], session["username"])
+    else:
+        db.suggest_new_amenity(request.form["name"], request.form["latitude"], request.form["longitude"], session["username"])
+    return redirect(url_for("add"))
+
+@app.route("/addrestaurant", methods=['POST'])
+def addrestaurant():
+
+    isAdmin = db.is_admin(session["username"])
+    filename = upload_file()
+    if isAdmin:
+        #name, stars, imgname, latitude, longitude, proposer
+        db.create_new_restaurant(request.form["name"], request.form["rating"], filename, request.form["latitude"], request.form["longitude"], session["username"])
+    else:
+        db.suggest_new_restaurant(request.form["name"], request.form["rating"], filename, request.form["latitude"], request.form["longitude"], session["username"])
+    return redirect(url_for("add"))
+
 @app.route("/approve-admins", methods=["POST"])
-def approveadmins():
+def approve_admins():
     if request.form["approval"] == "reject":
         db.reject_admin(request.form["username"])
     else: # approve
         db.approve_admin(request.form["username"])
     return redirect(url_for("admin"))
+
+@app.route("/approve-amenity", methods=["POST"])
+def approve_amenity():
+    if request.form["approval"] == "reject":
+        db.reject_amenity(request.form["id"])
+    else: # approve
+        db.approve_amenity(request.form["id"], session["username"])
+    return redirect(url_for("admin"))
+
+@app.route("/approve-restaurant", methods=["POST"])
+def approve_restaurant():
+    if request.form["approval"] == "reject":
+        db.reject_restaurant(request.form["id"])
+    else: # approve
+        db.approve_restaurant(request.form["id"], session["username"])
+    return redirect(url_for("admin"))
+
+
+
+
+
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -154,7 +198,14 @@ def upload_file():
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        return filename
 
+
+def distance(lat1, lon1, lat2, lon2):
+    p = pi/180
+    a = 0.5 - cos((lat2-lat1)*p)/2 + cos(lat1*p) * cos(lat2*p) * (1-cos((lon2-lon1)*p))/2
+    return 12742 * asin(sqrt(a)) #2*R*asin...
+    
 if __name__ == "__main__": #false if this file imported as module
     #enable debugging, auto-restarting of server when this file is modified
     app.debug = True

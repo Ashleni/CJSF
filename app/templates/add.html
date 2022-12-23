@@ -15,14 +15,14 @@
 <body>
     {% include 'navbar.html' %}
     <center>{{"You have ADMIN privilleges" if isAdmin else "You do not have Admin privilleges"}}</center>
-    <form class="container border border-primary p-3 mb-3" action="/add" method="post">
+    <form class="container border border-primary p-3 mb-3" action="/addamenity" method="post">
         <div class="mb-3">
             <h3>Add an Amenity</h3>
             <br>
 
             <div class="form-group">
-                <label for="amenity">Amenity Name</label>
-                <input type="text" class="form-control" id="amenity" placeholder="Enter amenity name" required>
+                <label for="name">Amenity Name</label>
+                <input type="text" class="form-control" id="name" name="name" placeholder="Enter amenity name" required>
 
             </div>
 
@@ -30,30 +30,30 @@
 
             <div class="form-group">
                 <label for="latitude">Latitude</label>
-                <input type="number" class="form-control" id="latitude" placeholder="Enter latitude" required>
+                <input type="number" class="form-control" id="latitude" name="latitude" placeholder="Enter latitude" required>
 
             </div>
 
             <br>
             <div class="form-group">
                 <label for="longitude">Longitude</label>
-                <input type="number" class="form-control" id="longitude" placeholder="Enter longitude" required>
+                <input type="number" class="form-control" id="longitude" name="longitude" placeholder="Enter longitude" required>
 
             </div>
             
         </div>
     
-        <button type="submit" class="btn btn-primary" type="submit" value="#563d7c">{{"Submit" if isAdmin else "Submit for approval"}}</button>
+        <button class="btn btn-primary" type="submit">{{"Submit" if isAdmin else "Submit for approval"}}</button>
     </form>
 
-    <form class="container border border-primary p-3 mb-3" action="/add" method="post" enctype="multipart/form-data">
+    <form class="container border border-primary p-3 mb-3" action="/addrestaurant" method="post" enctype="multipart/form-data">
         <div class="mb-3">
             <h3>Add a Restaurant</h3>
             <br>
 
             <div class="form-group">
                 <label for="place">Restaurant Name</label>
-                <input type="text" class="form-control" id="place" placeholder="Enter place name" required>
+                <input type="text" class="form-control" id="name" name="name" placeholder="Enter place name" required>
 
             </div>
 
@@ -61,25 +61,25 @@
 
             <div class="form-group">
                 <label for="latitude">Latitude</label>
-                <input type="number" class="form-control" id="latitude" placeholder="Enter latitude" required>
+                <input type="number" class="form-control" id="latitude" name="latitude" placeholder="Enter latitude" required>
 
             </div>
 
             <br>
             <div class="form-group">
                 <label for="longitude">Longitude</label>
-                <input type="number" class="form-control" id="longitude" placeholder="Enter longitude" required>
+                <input type="number" class="form-control" id="longitude" name="longitude" placeholder="Enter longitude" required>
 
             </div>
-
+            <br>
             <div class="form-group">
                 <label for="rating">Rating</label>
-                <input type="number" min="0" max="5" step="0.1" class="form-control" id="rating" required>
+                <input type="number" min="0" max="5" step="0.1" class="form-control" id="rating" name="rating" required>
 
             </div>
-            
+            <br>
             <label for="formFileMultiple" class="form-label">Multiple files input example</label>
-            <input class="form-control" type="file" name="file" id="formFileMultiple" multiple required/>
+            <input class="form-control" type="file" name="file" id="formFileMultiple" required/>
 
         </div>
     
